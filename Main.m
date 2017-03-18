@@ -47,16 +47,16 @@ Reliability = 0.99;               % 99 percent reliability
 %http://www.rolmasterconveyors.ca/products/conveyor-rollers/)
 RollerRadius = 0.0254;            % m (radius of roller = 1 inch)
 RollerLength = 0.864;             % m (arbitrary assumption, must be longer than BlankWidth, length of roller = width of belt)
-
-
-
+RollerDensity = 7850;             % kg/m^3 (assume same density as blanks)
+nRollers = 2;                     % Number of rollers in the conveyor
+Jroller = pi()*RollerDensity*RollerLength*((RollerRadius*2)^2)/32
 
 
 %% Required power
 % To use a defined function titled "output_power" to calculate and display
 % required power and torque for the motor as well as respective speed
 
-[Po,To,W] = output_power(BlankMass,BeltMass);                        % Required output power, Torque and Speed
+[Po,To,W] = output_power(BlankLoad,BeltMass,Jroller,nRollers,RollerRadius,Speed);                        % Required output power, Torque and Speed
 disp(['Required output power:  ' num2str(Po) ' kW  ']);              % Display the required output power
 disp(['Required output torque: ' num2str(To) ' N.m ']);              % Display the required output torque
 disp(['Required speed:   ' num2str(W) ' rpm ']);                     % Display the required speed
