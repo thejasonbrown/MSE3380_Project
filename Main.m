@@ -56,7 +56,7 @@ Jroller = pi()*RollerDensity*RollerLength*((RollerRadius*2)^2)/32
 % To use a defined function titled "output_power" to calculate and display
 % required power and torque for the motor as well as respective speed
 
-[Po,To,W] = output_power(BlankLoad,BeltMass,Jroller,nRollers,RollerRadius,Speed);                        % Required output power, Torque and Speed
+[Po,To,W] = output_power(BlankLoad,BeltMass,Jroller,nRollers,RollerRadius,Speed,Friction);                        % Required output power, Torque and Speed
 disp(['Required output power:  ' num2str(Po) ' kW  ']);              % Display the required output power
 disp(['Required output torque: ' num2str(To) ' N.m ']);              % Display the required output torque
 disp(['Required speed:   ' num2str(W) ' rpm ']);                     % Display the required speed
