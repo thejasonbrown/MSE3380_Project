@@ -46,10 +46,10 @@ Reliability = 0.99;               % 99 percent reliability
 %Roller Parameters (Using Conveyor Roller Model 2013 found here:
 %http://www.rolmasterconveyors.ca/products/conveyor-rollers/)
 RollerRadius = 0.0254;            % m (radius of roller = 1 inch)
-RollerLength = 0.864;             % m (arbitrary assumption, must be longer than BlankWidth, length of roller = width of belt)
+RollerLength = 0.815;             % m (given)
 RollerDensity = 7850;             % kg/m^3 (assume same density as blanks)
 nRollers = 2;                     % Number of rollers in the conveyor
-Jroller = pi()*RollerDensity*RollerLength*((RollerRadius*2)^2)/32
+Jroller = pi()*RollerDensity*RollerLength*((RollerRadius*2)^2)/32;
 
 
 %% Required power
@@ -64,11 +64,15 @@ disp(['Required speed:   ' num2str(W) ' rpm ']);                     % Display t
 %% Motor choice
 % To show the selected motor spec. from the catalogue 
 
-motor  = struct('name',     'SIZE 23H2 (57 mm) · 2 phase 1.8° ', ...
-                'output',      10, ...        % [kW]
-                'speed',    1000,    ...      % [rpm]
-                'torque',     10,  ...        % [Nm]
-                'price',     1000, ...        % [USD]
+
+%Based on calculations and with a assumed gearing of x10, this motor was
+%the best fit
+
+motor  = struct('name',     'SIZE 34H2 (86 mm) · 2 phase 1.8° ', ...
+                'output',      10,  ...        % [kW]
+                'speed',      400,  ...        % [rpm]
+                'torque',     4.4,  ...        % [Nm]
+                'price',     1000,  ...        % [USD]
                 'website',  'http://www.kocomotion.de/fileadmin/pages/10_PRODUKTE/Dings/Dings_hybrid-steppermotors.pdf');
             
 
@@ -76,6 +80,8 @@ motor  = struct('name',     'SIZE 23H2 (57 mm) · 2 phase 1.8° ', ...
 %% Gear design
 % To use and display bending stress, contact stress and safety factor for
 % all gears by using a functions named "gear_bending" and "gear_contact"
+
+
 
 %[B_S1,S_F1] = gear_bending(A,B,C);                                   % Bending stress for gear 1
 %[C_S1,S_F1] = gear_contact(A,BeltWeight,C);                                   % Contact stress for gear 1
