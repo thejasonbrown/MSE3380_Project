@@ -10,7 +10,7 @@ Jtotal = (Jroller * nRollers) + (BlankLoad * RollerRadius^2) + (BeltMass * Rolle
 
 W = Speed*60/(2*pi()*RollerRadius); %Gives the angular velocity in RPM required for linear speed of 0.1m/s
 To = StartingTorque;
-Po = (To*W*pi()/30 + Tension*Speed)/1000; %Torque multiplied by W [rad/s] gives power in kW
+Po = (To*W*pi()*2/60)/1000; %Torque multiplied by W [rad/s] gives power in kW
 
 %Equations sourced from:
 %http://www.brighthubengineering.com/manufacturing-technology/83551-onsite-calculations-for-conveyor-belt-systems/
