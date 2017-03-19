@@ -56,10 +56,10 @@ Jroller = pi()*RollerDensity*RollerLength*((RollerRadius*2)^2)/32;
 % To use a defined function titled "output_power" to calculate and display
 % required power and torque for the motor as well as respective speed
 
-[Po,To,W] = output_power(BlankLoad,BeltMass,Jroller,nRollers,RollerRadius,Speed,Friction);                        % Required output power, Torque and Speed
-disp(['Required output power:  ' num2str(Po) ' kW  ']);              % Display the required output power
-disp(['Required output torque: ' num2str(To) ' N.m ']);              % Display the required output torque
-disp(['Required speed:   ' num2str(W) ' rpm ']);                     % Display the required speed
+[RequiredOutputPower,RequiredOutputTorque,RequiredOutputVelocity] = output_power(BlankLoad,BeltMass,Jroller,nRollers,RollerRadius,Speed,Friction);                        % Required output power, Torque and Speed
+disp(['Required output power:  ' num2str(RequiredOutputPower) ' kW  ']);              % Display the required output power
+disp(['Required output torque: ' num2str(RequiredOutputTorque) ' N.m ']);              % Display the required output torque
+disp(['Required speed:   ' num2str(RequiredOutputVelocity) ' rpm ']);                     % Display the required speed
 
 %% Motor choice
 % To show the selected motor spec. from the catalogue 
@@ -81,6 +81,22 @@ motor  = struct('name',     'SIZE 34H2 (86 mm) · 2 phase 1.8° ', ...
 % To use and display bending stress, contact stress and safety factor for
 % all gears by using a functions named "gear_bending" and "gear_contact"
 
+%Finding the ratio of output to input
+DesiredGearingRatio = 1/10;%picked because of design choices
+PossibleInputSpeed = RequiredOutputVelocity * DesiredGearingRatio;
+%Making a 2 stage gearbox with minimal package size, therefore must sqrt
+Ratio1 = sqrt(DesiredGearingRatio);
+k = 1; %picked because of design choices
+PressureAngle = 20; %picked because of design choices
+m = 1/Ratio1;
+%Using formula 13-11 on Page 678
+PinionNumberOfTeeth = round(2*k/((1+2*m)*(sind(PressureAngle))^2)*(m+sqrt(m^2+(1+2*m)*(sind(PressureAngle))^2))) %15
+GearNumberOfTeeth = round(PinionNumberOfTeeth * m) %47
+
+%15 and 47 are both common numbers of teeth according to:
+%http://opis.cz/cross-morse/pdf/StandardGears.pdf
+ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2
+ActualInputSpeed = ActualGearingRatio*RequiredOutputVelocity
 
 
 %[B_S1,S_F1] = gear_bending(A,B,C);                                   % Bending stress for gear 1
