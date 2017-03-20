@@ -4,7 +4,7 @@ function [RequiredOutputPower,RequiredOuputTorque,RequiredOuputVelocity] = outpu
 Tension = (BlankLoad+BeltMass)*9.81*Friction; % N Tension in a horizontal belt is determined by mass of belt, load, and friction
 
 RunningTorque = RollerRadius * Tension; % N.m (Torque required to run the system)
-StartingTorque = RunningTorque * 2; %N.m (mulitply RunningTorque by 200 percent: http://www.motorsanddrives.com/cowern/motorterms7.html)
+StartingTorque = RunningTorque; %N.m (mulitply RunningTorque by 200 percent: http://www.motorsanddrives.com/cowern/motorterms7.html)
 
 Jtotal = (Jroller * nRollers) + (BlankLoad * RollerRadius^2) + (BeltMass * RollerRadius^2); % kg.m^2 Total inertia of the loads and conveyor
 
