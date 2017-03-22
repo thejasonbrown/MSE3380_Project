@@ -82,7 +82,7 @@ motor  = struct('name',     'SIZE 34H2 (86 mm) · 2 phase 1.8° ', ...
 % all gears by using a functions named "gear_bending" and "gear_contact"
 
 %Finding the ratio of output to input
-DesiredGearingRatio = 1/50
+DesiredGearingRatio = 1/56.25
 ;%picked because of design choices
 PossibleInputSpeed = RequiredOutputVelocity * DesiredGearingRatio;
 %Making a 2 stage gearbox with minimal package size, therefore must sqrt
