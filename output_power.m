@@ -5,11 +5,9 @@ Tension = (BlankLoad+BeltMass)*9.81*Friction; % N Tension in a horizontal belt i
 %including efficiency
 Efficiency = 0.9;
 RunningTorque = RollerRadius * Tension; % N.m (Torque required to run the system)
-StartingTorque = RunningTorque*1.2/Efficiency; %N.m (mulitply RunningTorque by 20 percent: http://www.motorsanddrives.com/cowern/motorterms7.html)
+StartingTorque = RunningTorque*1.2/Efficiency; %N.m 20% FOS & 90% efficiency
 
 %Not used anywhere
-Jtotal = (Jroller * nRollers) + (BlankLoad * RollerRadius^2) + (BeltMass * RollerRadius^2); % kg.m^2 Total inertia of the loads and conveyor
-
 RequiredOuputVelocity = Speed*60/(2*pi()*RollerRadius); %Gives the angular velocity in RPM required for linear speed of 0.1m/s
 RequiredOuputTorque = StartingTorque;
 RequiredOutputPower = (RequiredOuputTorque*RequiredOuputVelocity*pi()*2/60)/1000; %Torque multiplied by W [rad/s] gives power in kW
