@@ -2,19 +2,16 @@ function [RequiredOutputPower,RequiredOuputTorque,RequiredOuputVelocity] = outpu
 %This function calculates the required output power, torque, and speed
 
 Tension = (BlankLoad+BeltMass)*9.81*Friction; % N Tension in a horizontal belt is determined by mass of belt, load, and friction
-
+%including efficiency
+Efficiency = 0.9;
 RunningTorque = RollerRadius * Tension; % N.m (Torque required to run the system)
-StartingTorque = RunningTorque; %N.m (mulitply RunningTorque by 200 percent: http://www.motorsanddrives.com/cowern/motorterms7.html)
+StartingTorque = RunningTorque*1.2/Efficiency; %N.m 20% FOS & 90% efficiency
 
-Jtotal = (Jroller * nRollers) + (BlankLoad * RollerRadius^2) + (BeltMass * RollerRadius^2); % kg.m^2 Total inertia of the loads and conveyor
-
+%Not used anywhere
 RequiredOuputVelocity = Speed*60/(2*pi()*RollerRadius); %Gives the angular velocity in RPM required for linear speed of 0.1m/s
 RequiredOuputTorque = StartingTorque;
 RequiredOutputPower = (RequiredOuputTorque*RequiredOuputVelocity*pi()*2/60)/1000; %Torque multiplied by W [rad/s] gives power in kW
-RequiredOutputPower = RequiredOutputPower *1.2;% Account for 20% FOS on power requirement
-%Including efficiency
-Efficiency = 0.9;
-RequiredOutputPower = RequiredOutputPower/Efficiency;
+
 
 %Equations sourced from:
 %http://www.brighthubengineering.com/manufacturing-technology/83551-onsite-calculations-for-conveyor-belt-systems/

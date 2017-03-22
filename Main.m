@@ -45,7 +45,7 @@ Reliability = 0.99;               % 99 percent reliability
 
 %Roller Parameters (Using Conveyor Roller Model 2013 found here:
 %http://www.rolmasterconveyors.ca/products/conveyor-rollers/)
-RollerRadius = 0.0254;            % m (radius of roller = 1 inch)
+RollerRadius = 1;            % m (radius of roller = 1 inch)
 RollerLength = 0.815;             % m (given)
 RollerDensity = 7850;             % kg/m^3 (assume same density as blanks)
 nRollers = 2;                     % Number of rollers in the conveyor
@@ -82,7 +82,7 @@ motor  = struct('name',     'SIZE 34H2 (86 mm) · 2 phase 1.8° ', ...
 % all gears by using a functions named "gear_bending" and "gear_contact"
 
 %Finding the ratio of output to input
-DesiredGearingRatio = 1/16
+DesiredGearingRatio = 1/56.25
 ;%picked because of design choices
 %[B_S1,S_F1] = gear_bending(A,B,C);                                   % Bending stress for gear 1
 PossibleInputSpeed = RequiredOutputVelocity * DesiredGearingRatio;
