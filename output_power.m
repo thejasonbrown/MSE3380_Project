@@ -11,7 +11,7 @@ Jtotal = (Jroller * nRollers) + (BlankLoad * RollerRadius^2) + (BeltMass * Rolle
 RequiredOuputVelocity = Speed*60/(2*pi()*RollerRadius); %Gives the angular velocity in RPM required for linear speed of 0.1m/s
 RequiredOuputTorque = StartingTorque;
 RequiredOutputPower = (RequiredOuputTorque*RequiredOuputVelocity*pi()*2/60)/1000; %Torque multiplied by W [rad/s] gives power in kW
-
+RequiredOutputPower = RequiredOutputPower *1.2;% Account for 20% FOS on power requirement
 %Including efficiency
 Efficiency = 0.9;
 RequiredOutputPower = RequiredOutputPower/Efficiency;
