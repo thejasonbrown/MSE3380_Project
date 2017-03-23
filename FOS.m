@@ -3,29 +3,9 @@
 
 %% Inputs
 %Gear Info
-material = struct('Name', 'Steel',...
-    'H', 200,...
-    'Grade', 1,...
-    'E', 210e3,...
-    'v', 0.3);
-gearSet = struct('Material', material,...
-    'DiametralPitch', 0.4,... %mm
-    'PitchAngle', 20,... %Degrees
-    'FaceWidth', 18,... %mm
-    'PinionTeeth', 20,...
-    'GearTeeth', 36,...
-    'Quality', 6);
-
-clear material;
-
+function [FOS] =  FOS (operatingConditions, power, nPinion, life, reliability, gearSet)
 %load condition
-operatingConditions = 'CE';
-power = 120; %watts
-nPinion = 100; %RPM
 
-%Service Requirements
-life = 10^8;
-reliability = 0.95;
 
 %% Processing
 
@@ -39,7 +19,7 @@ wt = power/V; %[N]
 K0 = 1; %Overload Factor
 Kv = DynamicFactor(gearSet.Quality, V);
 Ks = SizeFactor(gearSet);
-Kh = 1.27;%***********LoadDistributionFactor(fwPinion, diametralPitch*tPinion);
+Kh = LoadDistributionFactor(gearSet.FaceWidth, gearSet.DiametralPitch*gearSet.PinionTeeth);
 Kb = 1; %Rim-Thickness Factor
 Yj = [0.33 0.38]; %****************Hard coded for now * Geometric Bending Strength
 Zr = 1; %Suface Finish Factor
@@ -66,6 +46,10 @@ FOSPinionBending = (St/pinionBendingStress) * (Yn(1)/(Ytheta*Yz))
 FOSGearBending = (St/gearBendingStress) * (Yn(2)/(Ytheta*Yz))
 FOSPinionPitting = (Sc/pinionContactStress) * ((Zn(1)*Ch)/(Ytheta*Yz))
 FOSGearPitting = (Sc/gearContactStress) * ((Zn(2)*Ch)/(Ytheta*Yz))
+
+FOS = [FOSPinionBending FOSPinionPitting; FOSGearBending FOSGearPitting]
+
+end
 
 %% Auxilary Functions
 % Lookup Functions
