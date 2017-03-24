@@ -57,8 +57,8 @@ Jroller = pi()*RollerDensity*RollerLength*((RollerRadius*2)^2)/32;
 % required power and torque for the motor as well as respective speed
 
 [FOSOutputPower,FOSOutputTorque,RequiredOutputVelocity] = output_power(BlankLoad,BeltMass,RollerRadius,Speed,Friction);                        % Required output power, Torque and Speed
-disp(['Required output power:  ' num2str(RequiredOutputPower) ' kW  ']);              % Display the required output power
-disp(['Required output torque: ' num2str(RequiredOutputTorque) ' N.m ']);              % Display the required output torque
+disp(['Required output power:  ' num2str(FOSOutputPower) ' kW  ']);              % Display the required output power
+disp(['Required output torque: ' num2str(FOSOutputTorque) ' N.m ']);              % Display the required output torque
 disp(['Required speed:   ' num2str(RequiredOutputVelocity) ' rpm ']);                     % Display the required speed
 
 %% Motor choice
@@ -118,10 +118,3 @@ ActualInputSpeed = ActualGearingRatio*RequiredOutputVelocity
 %disp(['Contact stress for gear no. 1 is :  ' num2str(C_S1) ' Mpa  ']);   % Display contact stres for gear 1
 %disp(['Safety factor for gear no. 1 is :  ' num2str(S_F1) ' Mpa  ']);    % Display safety factor for gear 1
 
-function [pinionTeeth] = PinionNumCalc(k,PressureAngle,m)
-pinionTeeth = ceil(2*k/((1+2*m)*(sind(PressureAngle))^2)*(m+sqrt(m^2+(1+2*m)*(sind(PressureAngle))^2))); %15
-end
-
-function [MaxGearTeeth] = GearNumCalc(k,pinionTeeth,PressureAngle)
-MaxGearTeeth= floor((pinionTeeth^2*(sind(PressureAngle))^2-4*k^2)/(4*k-2*pinionTeeth*(sind(PressureAngle))^2));
-end
