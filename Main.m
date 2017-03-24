@@ -93,3 +93,18 @@ GearNumberOfTeeth;
 %disp(['Bending stress for gear no. 1 is :  ' num2str(B_S1) ' Mpa  ']);   % Display bending stres for gear 1
 %disp(['Contact stress for gear no. 1 is :  ' num2str(C_S1) ' Mpa  ']);   % Display contact stres for gear 1
 %disp(['Safety factor for gear no. 1 is :  ' num2str(S_F1) ' Mpa  ']);    % Display safety factor for gear 1
+
+%% Shaft Design
+%From selected gears, 
+PinionBore = 1.125;
+GearBore = 1.625;
+%Shaft Material Constants
+%Current Material : 1050 HR 
+shaftTensileStrength = 620; %MPa
+inchesToM = 25.4/1000;
+ExpectedTorqueOnPinion2=FOSOutputTorque/(GearNumberOfTeeth/PinionNumberOfTeeth);
+%Preliminary shaft shear check from smallest bore diameter
+jShaft=pi*(PinionBore*inchesToM)^4/32;
+shearStress = ExpectedTorqueOnPinion2*(GearBore*inchesToM)/jShaft;
+FOSShearStrength = 0.75*620e6/shearStress;
+
