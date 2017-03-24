@@ -1,4 +1,4 @@
-function [ sigma_c ] = gear_wear( angle, mG, mN, Wt, V, Qv, F, d, dp)
+function [ sigma_c ] = gear_contact( angle, mG, mN, Wt, V, Qv, F, d, dp)
 
 %Calculating I, using formula 14-23 for an external gear
 I = cosd(angle)*sind(angle)/(2*mN)*(mG)/(mG+1);

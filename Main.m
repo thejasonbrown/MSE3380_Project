@@ -41,8 +41,6 @@ BlankMass = BlankThickness*BlankLength*BlankWidth*SteelDensity;  %kg (Mass of on
 nBlanks = 2;                  % Number of blanks on conveyor at a time (1 blank is equivalent to all the blades cut from it)
 BlankLoad = BlankMass*nBlanks; %kg (Total mass of all blanks on conveyor)
 
-
-
 %% First design assumptions
 % To insert the value for any assumed value other than design constrains ones
 
@@ -51,7 +49,6 @@ Efficiency = 0.9;                 % 90 percent efficiency
 Reliability = 0.99;               % 99 percent reliability
 PressureAngle = 20;               % Given
 k = 1;                            % Picked because we are using full depth teeth
-
 
 %% Required power
 % To use a defined function titled "output_power" to calculate and display
