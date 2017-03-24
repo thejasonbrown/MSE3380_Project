@@ -82,26 +82,20 @@ motor  = struct('name',     'SIZE 34H2 (86 mm) · 2 phase 1.8° ', ...
 % all gears by using a functions named "gear_bending" and "gear_contact"
 
 %Finding the ratio of output to input
-<<<<<<< HEAD
-DesiredGearingRatio = 1/56.25; %Picked to achieve scaled down RPM and scaled up torque required
-=======
-DesiredGearingRatio = 1/79;%picked because of design choices
-%[B_S1,S_F1] = gear_bending(A,B,C);                                   % Bending stress for gear 1
->>>>>>> 6b14d0a1d33caadb99216e617b4571d523f734d4
+DesiredGearingRatio = 1/79; %Picked to achieve scaled down RPM and scaled up torque required
+%[B_S1,S_F1] = gear_bending(A,B,C); % Bending stress for gear 1
 PossibleInputSpeed = RequiredOutputVelocity * DesiredGearingRatio;
 %Making a 2 stage gearbox with minimal package size, therefore must sqrt
 Ratio1 = sqrt(DesiredGearingRatio);
 k = 1; %picked because of design choices
-PressureAngle = 20; %picked because of design choices
+PressureAngle = 20; % Given
 m = 1/Ratio1;
 
 %Using formula 13-11 on Page 678
-<<<<<<< HEAD
-PinionNumberOfTeeth = round(2*k/((1+2*m)*(sind(PressureAngle))^2)*(m+sqrt(m^2+(1+2*m)*(sind(PressureAngle))^2))) %15
-GearNumberOfTeeth = round(PinionNumberOfTeeth * m) %
+PinionNumberOfTeeth = ceil(2*k/((1+2*m)*(sind(PressureAngle))^2)*(m+sqrt(m^2+(1+2*m)*(sind(PressureAngle))^2)))
+GearNumberOfTeeth = ceil(PinionNumberOfTeeth * m)
 
 ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2
-=======
 PotentialGearingRatio=1;
 while(PotentialGearingRatio<=(1/DesiredGearingRatio))
 more=0;
@@ -115,10 +109,6 @@ more=more+1;
 end
 GearNumberOfTeeth = round(PinionNumberOfTeeth*m)
 ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2
-%15 and 47 are both common numbers of teeth according to:
-%http://opis.cz/cross-morse/pdf/StandardGears.pdf
-%ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2
->>>>>>> 6b14d0a1d33caadb99216e617b4571d523f734d4
 ActualInputSpeed = ActualGearingRatio*RequiredOutputVelocity
 
 
