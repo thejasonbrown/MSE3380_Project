@@ -88,14 +88,15 @@ DesiredGearingRatio = 79; %Picked to achieve scaled down RPM and scaled up torqu
 [PinionNumberOfTeeth, GearNumberOfTeeth] = GearTeethCalculator(DesiredGearingRatio,PressureAngle,k,RequiredOutputVelocity);
 PinionNumberOfTeeth;
 GearNumberOfTeeth;
-
+disp(['PinionNumberOfTeeth:   ' num2str(PinionNumberOfTeeth) ' teeth ']);  
+disp(['GearNumberOfTeeth:   ' num2str(GearNumberOfTeeth) ' teeth ']);  
 ActualGearingRatio = GearNumberOfTeeth/PinionNumberOfTeeth;
 
 % Resolution Check
 MotorStepSize = 0.72;
 StepAsFractionOfFullRotation = 0.72/360;
 Resolution = StepAsFractionOfFullRotation/(ActualGearingRatio^2)*RollerCircumference;
-
+disp(['Resolution:   ' num2str(Resolution) ' mm/step ']); 
 %[B_S1,S_F1] = gear_bending(A,B,C);                                       % Bending stress for gear 1
 %[C_S1,S_F1] = gear_contact(A,BeltWeight,C);                              % Contact stress for gear 1
 %disp(['Bending stress for gear no. 1 is :  ' num2str(B_S1) ' Mpa  ']);   % Display bending stres for gear 1
