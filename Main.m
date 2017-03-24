@@ -92,20 +92,21 @@ PressureAngle = 20; % Given
 m = 1/Ratio1;
 
 %Using formula 13-11 on Page 678
-PinionNumberOfTeeth = ceil(2*k/((1+2*m)*(sind(PressureAngle))^2)*(m+sqrt(m^2+(1+2*m)*(sind(PressureAngle))^2)))
-GearNumberOfTeeth = ceil(PinionNumberOfTeeth * m)
+%PinionNumberOfTeeth = ceil(2*k/((1+2*m)*(sind(PressureAngle))^2)*(m+sqrt(m^2+(1+2*m)*(sind(PressureAngle))^2)))
+%GearNumberOfTeeth = ceil(PinionNumberOfTeeth * m)
 
-ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2
+%ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2
 PotentialGearingRatio=1;
-while(PotentialGearingRatio<=(1/DesiredGearingRatio))
 more=0;
-PinionNumberOfTeeth = PinionNumCalc (1,PressureAngle,m)
-if(PinionNumberOfTeeth==17)
-    PinionNumberOfTeeth=PinionNumberOfTeeth + 1;
-end
-MaxGearNumberOfTeeth = GearNumCalc(1,PinionNumberOfTeeth,PressureAngle)
-PotentialGearingRatio = (MaxGearNumberOfTeeth/PinionNumberOfTeeth)^2
-more=more+1;
+
+while(PotentialGearingRatio<=(1/DesiredGearingRatio))
+    PinionNumberOfTeeth = PinionNumCalc (1,PressureAngle,m)
+    if(PinionNumberOfTeeth==17)
+        PinionNumberOfTeeth=PinionNumberOfTeeth + 1;
+    end
+    MaxGearNumberOfTeeth = GearNumCalc(1,PinionNumberOfTeeth,PressureAngle)
+    PotentialGearingRatio = (MaxGearNumberOfTeeth/PinionNumberOfTeeth)^2
+    more=more+1;
 end
 GearNumberOfTeeth = round(PinionNumberOfTeeth*m)
 ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2
@@ -117,4 +118,3 @@ ActualInputSpeed = ActualGearingRatio*RequiredOutputVelocity
 %disp(['Bending stress for gear no. 1 is :  ' num2str(B_S1) ' Mpa  ']);   % Display bending stres for gear 1
 %disp(['Contact stress for gear no. 1 is :  ' num2str(C_S1) ' Mpa  ']);   % Display contact stres for gear 1
 %disp(['Safety factor for gear no. 1 is :  ' num2str(S_F1) ' Mpa  ']);    % Display safety factor for gear 1
-
