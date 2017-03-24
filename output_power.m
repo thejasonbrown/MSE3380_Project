@@ -8,7 +8,6 @@ FOSOutputTorque = TheoreticalOutputTorque*1.2; %N.m 20% FOS
 
 RequiredOutputVelocity = Speed*60/(2*pi*RollerRadius); %Gives the angular velocity in RPM required for linear speed of 0.1m/s
 
-FOSOutputPower = (FOSOutputTorque*RequiredOutputVelocity*pi*2/60)/1000 %Torque multiplied by W [rad/s] gives power in kW
+FOSOutputPower = (FOSOutputTorque*RequiredOutputVelocity*pi*2/60)/1000; %Torque multiplied by W [rad/s] gives power in kW
 
 end
-

@@ -4,9 +4,6 @@
 %% Inputs
 %Gear Info
 function [FOS] =  FOS (operatingConditions, power, nPinion, life, reliability, gearSet)
-%load condition
-
-
 %% Processing
 
 %Determine Auxilary Values
@@ -42,12 +39,12 @@ Yz = ReliabilityFactor(reliability);
 Zn = StressLifePittingFactor(life, gearRatio); %Stress life factor
 
 %Calculate FOS
-FOSPinionBending = (St/pinionBendingStress) * (Yn(1)/(Ytheta*Yz))
-FOSGearBending = (St/gearBendingStress) * (Yn(2)/(Ytheta*Yz))
-FOSPinionPitting = (Sc/pinionContactStress) * ((Zn(1)*Ch)/(Ytheta*Yz))
-FOSGearPitting = (Sc/gearContactStress) * ((Zn(2)*Ch)/(Ytheta*Yz))
+FOSPinionBending = (St/pinionBendingStress) * (Yn(1)/(Ytheta*Yz));
+FOSGearBending = (St/gearBendingStress) * (Yn(2)/(Ytheta*Yz));
+FOSPinionPitting = (Sc/pinionContactStress) * ((Zn(1)*Ch)/(Ytheta*Yz));
+FOSGearPitting = (Sc/gearContactStress) * ((Zn(2)*Ch)/(Ytheta*Yz));
 
-FOS = [FOSPinionBending FOSPinionPitting; FOSGearBending FOSGearPitting]
+FOS = [FOSPinionBending FOSPinionPitting; FOSGearBending FOSGearPitting];
 
 end
 

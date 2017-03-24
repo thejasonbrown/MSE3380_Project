@@ -7,7 +7,7 @@
 % Department    Mechanical & Materials Engineering
 % Faculty       Engineering
 % Institution   Western University
-% Date          March 17, 2017
+% Date          March 24, 2017
 
 %% Clear workspace
 close all
@@ -19,9 +19,16 @@ clc
 % To insert design contrain values
 
 %Conveyor Parameters
-BeltMass = 75;              % kg (Weight of the conveyor belt)
+BeltMass = 75;                % kg (Weight of the conveyor belt)
 ConveyorLength = 6;           % m (Length of top edge of conveyor)
 Friction = 0.12;              % (Coefficeint of friction)
+
+%Roller Parameters (Using Conveyor Roller Model 2013 found here:
+%http://www.rolmasterconveyors.ca/products/conveyor-rollers/)
+RollerLength = 0.815;             % m (given)
+RollerDensity = 7850;             % kg/m^3 (assume same density as blanks)
+nRollers = 2;                     % Number of rollers in the conveyor
+RollerRadius = 1;             % m (radius of roller = 1 inch)
 
 %Blank Parameters
 BlankThickness = 0.006;       % m (Thickness of blank)
@@ -42,14 +49,8 @@ BlankLoad = BlankMass*nBlanks; %kg (Total mass of all blanks on conveyor)
 Speed = 0.1;                      % m/s (Conveyer Speed )
 Efficiency = 0.9;                 % 90 percent efficiency
 Reliability = 0.99;               % 99 percent reliability
-
-%Roller Parameters (Using Conveyor Roller Model 2013 found here:
-%http://www.rolmasterconveyors.ca/products/conveyor-rollers/)
-RollerRadius = 1;            % m (radius of roller = 1 inch)
-RollerLength = 0.815;             % m (given)
-RollerDensity = 7850;             % kg/m^3 (assume same density as blanks)
-nRollers = 2;                     % Number of rollers in the conveyor
-Jroller = pi()*RollerDensity*RollerLength*((RollerRadius*2)^2)/32;
+PressureAngle = 20;               % Given
+k = 1;                            % Picked because we are using full depth teeth
 
 
 %% Required power
@@ -64,9 +65,13 @@ disp(['Required speed:   ' num2str(RequiredOutputVelocity) ' rpm ']);           
 %% Motor choice
 % To show the selected motor spec. from the catalogue 
 
+% Required motor torque must include efficiency
+% This was used to spec the motor
+RequiredMotorPower = FOSOutputPower/Efficiency;
+RequiredMotorTorque = FOSOutputTorque/Efficiency;
 
-%Based on calculations and with a assumed gearing of x10, this motor was
-%the best fit
+% Based on calculations and with a assumed gearing of x10, this motor was
+% the best fit
 
 motor  = struct('name',     'SIZE 34H2 (86 mm) · 2 phase 1.8° ', ...
                 'output',      10,  ...        % [kW]
@@ -75,46 +80,44 @@ motor  = struct('name',     'SIZE 34H2 (86 mm) · 2 phase 1.8° ', ...
                 'price',     1000,  ...        % [USD]
                 'website',  'http://www.kocomotion.de/fileadmin/pages/10_PRODUKTE/Dings/Dings_hybrid-steppermotors.pdf');
             
-
-
 %% Gear design
 % To use and display bending stress, contact stress and safety factor for
 % all gears by using a functions named "gear_bending" and "gear_contact"
 
 %Finding the ratio of output to input
-DesiredGearingRatio = 1/79; %Picked to achieve scaled down RPM and scaled up torque required
-%[B_S1,S_F1] = gear_bending(A,B,C); % Bending stress for gear 1
+DesiredGearingRatio = 79; %Picked to achieve scaled down RPM and scaled up torque required
 PossibleInputSpeed = RequiredOutputVelocity * DesiredGearingRatio;
+
 %Making a 2 stage gearbox with minimal package size, therefore must sqrt
-Ratio1 = sqrt(DesiredGearingRatio);
-k = 1; %picked because of design choices
-PressureAngle = 20; % Given
-m = 1/Ratio1;
+m = sqrt(DesiredGearingRatio);
 
 %Using formula 13-11 on Page 678
-%PinionNumberOfTeeth = ceil(2*k/((1+2*m)*(sind(PressureAngle))^2)*(m+sqrt(m^2+(1+2*m)*(sind(PressureAngle))^2)))
-%GearNumberOfTeeth = ceil(PinionNumberOfTeeth * m)
-
-%ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2
 PotentialGearingRatio=1;
-more=0;
 
-while(PotentialGearingRatio<=(1/DesiredGearingRatio))
-    PinionNumberOfTeeth = PinionNumCalc (1,PressureAngle,m)
+while(PotentialGearingRatio<=(DesiredGearingRatio))
+    PinionNumberOfTeeth = PinionNumCalc (1,PressureAngle,m);
     if(PinionNumberOfTeeth==17)
         PinionNumberOfTeeth=PinionNumberOfTeeth + 1;
     end
-    MaxGearNumberOfTeeth = GearNumCalc(1,PinionNumberOfTeeth,PressureAngle)
-    PotentialGearingRatio = (MaxGearNumberOfTeeth/PinionNumberOfTeeth)^2
-    more=more+1;
+    MaxGearNumberOfTeeth = GearNumCalc(1,PinionNumberOfTeeth,PressureAngle);
+    if(MaxGearNumberOfTeeth < 0)
+        MaxGearNumberOfTeeth = 'Infinite';
+        break
+    end
+    PotentialGearingRatio = (MaxGearNumberOfTeeth/PinionNumberOfTeeth)^2;
 end
-GearNumberOfTeeth = round(PinionNumberOfTeeth*m)
-ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2
-ActualInputSpeed = ActualGearingRatio*RequiredOutputVelocity
+
+% To display values, delete apostrophes
+MaxGearNumberOfTeeth;
+PinionNumberOfTeeth;
+GearNumberOfTeeth = round(PinionNumberOfTeeth*m);
+ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2;
+ActualInputSpeed = ActualGearingRatio*RequiredOutputVelocity;
 
 
-%[B_S1,S_F1] = gear_bending(A,B,C);                                   % Bending stress for gear 1
-%[C_S1,S_F1] = gear_contact(A,BeltWeight,C);                                   % Contact stress for gear 1
+
+%[B_S1,S_F1] = gear_bending(A,B,C);                                       % Bending stress for gear 1
+%[C_S1,S_F1] = gear_contact(A,BeltWeight,C);                              % Contact stress for gear 1
 %disp(['Bending stress for gear no. 1 is :  ' num2str(B_S1) ' Mpa  ']);   % Display bending stres for gear 1
 %disp(['Contact stress for gear no. 1 is :  ' num2str(C_S1) ' Mpa  ']);   % Display contact stres for gear 1
 %disp(['Safety factor for gear no. 1 is :  ' num2str(S_F1) ' Mpa  ']);    % Display safety factor for gear 1
