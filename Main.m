@@ -86,35 +86,10 @@ motor  = struct('name',     'SIZE 34H2 (86 mm) · 2 phase 1.8° ', ...
 
 %Finding the ratio of output to input
 DesiredGearingRatio = 79; %Picked to achieve scaled down RPM and scaled up torque required
-PossibleInputSpeed = RequiredOutputVelocity * DesiredGearingRatio;
 
-%Making a 2 stage gearbox with minimal package size, therefore must sqrt
-m = sqrt(DesiredGearingRatio);
-
-%Using formula 13-11 on Page 678
-PotentialGearingRatio=1;
-
-while(PotentialGearingRatio<=(DesiredGearingRatio))
-    PinionNumberOfTeeth = PinionNumCalc (1,PressureAngle,m);
-    if(PinionNumberOfTeeth==17)
-        PinionNumberOfTeeth=PinionNumberOfTeeth + 1;
-    end
-    MaxGearNumberOfTeeth = GearNumCalc(1,PinionNumberOfTeeth,PressureAngle);
-    if(MaxGearNumberOfTeeth < 0)
-        MaxGearNumberOfTeeth = 'Infinite';
-        break
-    end
-    PotentialGearingRatio = (MaxGearNumberOfTeeth/PinionNumberOfTeeth)^2;
-end
-
-% To display values, delete apostrophes
-MaxGearNumberOfTeeth;
+[PinionNumberOfTeeth, GearNumberOfTeeth] = GearTeethCalculator(DesiredGearingRatio,PressureAngle,k,RequiredOutputVelocity);
 PinionNumberOfTeeth;
-GearNumberOfTeeth = round(PinionNumberOfTeeth*m);
-ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2;
-ActualInputSpeed = ActualGearingRatio*RequiredOutputVelocity;
-
-
+GearNumberOfTeeth;
 
 %[B_S1,S_F1] = gear_bending(A,B,C);                                       % Bending stress for gear 1
 %[C_S1,S_F1] = gear_contact(A,BeltWeight,C);                              % Contact stress for gear 1
