@@ -94,7 +94,7 @@ ActualGearingRatio = GearNumberOfTeeth/PinionNumberOfTeeth;
 % Resolution Check
 MotorStepSize = 0.72;
 StepAsFractionOfFullRotation = 0.72/360;
-Resolution = StepAsFractionOfFullRotation/(ActualGearingRatio^2)*RollerCircumference
+Resolution = StepAsFractionOfFullRotation/(ActualGearingRatio^2)*RollerCircumference;
 
 %[B_S1,S_F1] = gear_bending(A,B,C);                                       % Bending stress for gear 1
 %[C_S1,S_F1] = gear_contact(A,BeltWeight,C);                              % Contact stress for gear 1
@@ -106,13 +106,15 @@ Resolution = StepAsFractionOfFullRotation/(ActualGearingRatio^2)*RollerCircumfer
 %From selected gears, 
 PinionBore = 1.125;
 GearBore = 1.625;
+%Will enventually need to add bearing bore
+LimitingBore = min(GearBore, PinionBore);
 %Shaft Material Constants
 %Current Material : 1050 HR 
 shaftTensileStrength = 620; %MPa
 inchesToM = 25.4/1000;
-ExpectedTorqueOnPinion2=FOSOutputTorque/(GearNumberOfTeeth/PinionNumberOfTeeth);
+ExpectedTorqueOnPinion2=FOSOutputTorque/ActualGearingRatio;
 %Preliminary shaft shear check from smallest bore diameter
-jShaft=pi*(PinionBore*inchesToM)^4/32;
+jShaft=pi*(LimitingBore*inchesToM)^4/32;
 shearStress = ExpectedTorqueOnPinion2*(GearBore*inchesToM)/jShaft;
 FOSShearStrength = 0.75*620e6/shearStress;
 
