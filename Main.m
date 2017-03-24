@@ -96,7 +96,7 @@ ActualGearingRatio = GearNumberOfTeeth/PinionNumberOfTeeth;
 MotorStepSize = 0.72;
 StepAsFractionOfFullRotation = 0.72/360;
 Resolution = StepAsFractionOfFullRotation/(ActualGearingRatio^2)*RollerCircumference;
-disp(['Resolution:   ' num2str(Resolution) ' mm/step ']); 
+disp(['ConveyorBeltResolution:   ' num2str(Resolution) ' mm/step ']); 
 %[B_S1,S_F1] = gear_bending(A,B,C);                                       % Bending stress for gear 1
 %[C_S1,S_F1] = gear_contact(A,BeltWeight,C);                              % Contact stress for gear 1
 %disp(['Bending stress for gear no. 1 is :  ' num2str(B_S1) ' Mpa  ']);   % Display bending stres for gear 1
@@ -118,4 +118,5 @@ ExpectedTorqueOnPinion2=FOSOutputTorque/ActualGearingRatio;
 jShaft=pi*(LimitingBore*inchesToM)^4/32;
 shearStress = ExpectedTorqueOnPinion2*(GearBore*inchesToM)/jShaft;
 FOSShearStrength = 0.75*620e6/shearStress;
+disp(['FOSsimpleShearStrength:   ' num2str(FOSShearStrength) '  ']); 
 
