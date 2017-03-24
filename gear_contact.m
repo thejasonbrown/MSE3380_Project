@@ -1,4 +1,4 @@
-function [ sigma_c ] = gear_contact( angle, mG, mN, Wt, V, Qv, F, d, dp)
+function [ contact_stress ] = gear_contact( angle, mG, mN, Wt, V, Qv, F, d, dp)
 
 %Calculating I, using formula 14-23 for an external gear
 I = cosd(angle)*sind(angle)/(2*mN)*(mG)/(mG+1);
@@ -36,6 +36,6 @@ Ko = 1;
 Ks = 1;
 Cf = 1;
 
-sigma_c = Cp*sqrt(Wt*Ko*Kv*Ks*Km*Cf/(dp*F*I));
+contact_stress = Cp*sqrt(Wt*Ko*Kv*Ks*Km*Cf/(dp*F*I));
 end
 

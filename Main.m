@@ -29,6 +29,7 @@ RollerLength = 0.815;             % m (given)
 RollerDensity = 7850;             % kg/m^3 (assume same density as blanks)
 nRollers = 2;                     % Number of rollers in the conveyor
 RollerRadius = 1;             % m (radius of roller = 1 inch)
+RollerCircumference = RollerRadius*2*pi;
 
 %Blank Parameters
 BlankThickness = 0.006;       % m (Thickness of blank)
@@ -87,6 +88,13 @@ DesiredGearingRatio = 79; %Picked to achieve scaled down RPM and scaled up torqu
 [PinionNumberOfTeeth, GearNumberOfTeeth] = GearTeethCalculator(DesiredGearingRatio,PressureAngle,k,RequiredOutputVelocity);
 PinionNumberOfTeeth;
 GearNumberOfTeeth;
+
+ActualGearingRatio = GearNumberOfTeeth/PinionNumberOfTeeth;
+
+% Resolution Check
+MotorStepSize = 0.72;
+StepAsFractionOfFullRotation = 0.72/360;
+Resolution = StepAsFractionOfFullRotation/(ActualGearingRatio^2)*RollerCircumference
 
 %[B_S1,S_F1] = gear_bending(A,B,C);                                       % Bending stress for gear 1
 %[C_S1,S_F1] = gear_contact(A,BeltWeight,C);                              % Contact stress for gear 1
