@@ -1,6 +1,6 @@
-%% PROJECT      Stepper Motor Gearbox Design
+%% PROJECT      Stamping Press Conveyer System Drive System Design
 %
-% Group No.     9    
+% Group No.     9
 % Members       Michael Gerard Allan, Jason Michael Brown, Kaspar Shah Shahzada, Joshua Graham Underwood
 % Course        Mechanical Components Design for Mechatronic Systems (MSE 3380)
 % Instructor    Prof. Dr. Aaron Price
@@ -9,114 +9,117 @@
 % Institution   Western University
 % Date          March 24, 2017
 
+% *For further insight into the intermediate calculations, please see the
+%  called functions used in the main script
+
 %% Clear workspace
 close all
 evalin('caller','clear all');
 feature('accel','on')
 clc
 
-%% Design constraints
-% To insert design contrain values
+%% Output Requirements
+% To see Output Requirement calculations please see function
+% "requiredOutput.m"
 
-%Conveyor Parameters
-BeltMass = 75;                % kg (Weight of the conveyor belt)
-ConveyorLength = 6;           % m (Length of top edge of conveyor)
-Friction = 0.12;              % (Coefficeint of friction)
+%Calculate Required Outputs
+[reqOutputTorque,reqOutputVelocity,reqOutputPower] = requiredOutput();
 
-%Roller Parameters (Using Conveyor Roller Model 2013 found here:
-%http://www.rolmasterconveyors.ca/products/conveyor-rollers/)
-RollerLength = 0.815;             % m (given)
-RollerDensity = 7850;             % kg/m^3 (assume same density as blanks)
-nRollers = 2;                     % Number of rollers in the conveyor
-RollerRadius = 1;             % m (radius of roller = 1 inch)
-RollerCircumference = RollerRadius*2*pi;
+% Required output power, Torque and Speed
+disp('<strong>Output Requirements</strong>')
+disp(['Required output torque: ' num2str(reqOutputTorque, 5) ' [Nm] ']);        % Display the required output torque
+disp(['Required speed:   ' num2str(reqOutputVelocity, 2) ' [RPM] ']);            % Display the required speed
+disp(['Required output power:  ' num2str(reqOutputPower, 4) ' [W]  ']);          % Display the required output power
+disp(' ');
 
-%Blank Parameters
-BlankThickness = 0.006;       % m (Thickness of blank)
-BlankLength = 2.5;            % m (Length of blank)
-BlankWidth = 0.815;           % m (Width of blank)
-SteelDensity = 7850;          % kg/m^3 (Density of 1050 carbon steel) (http://www.azom.com/article.aspx?ArticleID=6526)
-BlankMass = BlankThickness*BlankLength*BlankWidth*SteelDensity;  %kg (Mass of one blank)
+%% Motor/Power Requirements
+% The required input power must account for the gearbox's 90% efficiency
+% Please see function "reqInputPower.m" for calculations
 
-%Miscellaneous Parameters
-nBlanks = 2;                  % Number of blanks on conveyor at a time (1 blank is equivalent to all the blades cut from it)
-BlankLoad = BlankMass*nBlanks; %kg (Total mass of all blanks on conveyor)
+% Calculate Motor Power Requirement
+reqInputPower = requiredInputPower(reqOutputPower);
 
-%% First design assumptions
-% To insert the value for any assumed value other than design constrains ones
+% Motor Selection
+motor  = struct('name',     'SIZE 34H5 (126 mm) · 5 phase 0.72° ', ...
+    'partNumber', '34H5126-280-5A',...
+    'powerOutput',      56.5,  ...        % [W]
+    'speed',      75,  ...        % [rpm]
+    'torque',     7.2,  ...        % [Nm]
+    'stepSize',    0.72,...      % [deg]
+    'website',  'http://www.kocomotion.de/fileadmin/pages/10_PRODUKTE/Dings/Dings_hybrid-steppermotors.pdf');
 
-Speed = 0.1;                      % m/s (Conveyer Speed )
-Efficiency = 0.9;                 % 90 percent efficiency
-Reliability = 0.99;               % 99 percent reliability
-PressureAngle = 20;               % Given
-k = 1;                            % Picked because we are using full depth teeth
+% Check Power Buffer
+powerBuffer = motor.powerOutput - reqInputPower;
 
-%% Required power
-% To use a defined function titled "output_power" to calculate and display
-% required power and torque for the motor as well as respective speed
+%Motor selection and design decisions
+disp('<strong>Motor Selection</strong>');
+disp(['Due to the motor`s inefficiencies the required input power to the gearbox (supplied by the motor) is ' num2str(reqInputPower, 3) ' [W]']);
+disp(['Using this specification, the ' motor.name ' motor was selected']);
+disp(['A ' motor.name ' motor will operate at ' num2str(motor.speed, '%i') ' [RPM] and provide up to ' num2str(motor.torque,2) ' [Nm], ' num2str(powerBuffer,3) ' [W] more than required']);
+disp(' ');
 
-[FOSOutputPower,FOSOutputTorque,RequiredOutputVelocity] = output_power(BlankLoad,BeltMass,RollerRadius,Speed,Friction);                        % Required output power, Torque and Speed
-disp(['Required output power:  ' num2str(FOSOutputPower) ' kW  ']);              % Display the required output power
-disp(['Required output torque: ' num2str(FOSOutputTorque) ' N.m ']);              % Display the required output torque
-disp(['Required speed:   ' num2str(RequiredOutputVelocity) ' rpm ']);                     % Display the required speed
+%% Gear Design - Gear Ratio & Tooth # Selection
+% Using the gearing interference equations, gear tooth # selection to
+% provide the appropriate gearing ratio with zero tooth interference
+% *Please read "GearTeethCalculator.m" to gain a better understanding of
+% the tooth selection process
 
-%% Motor choice
-% To show the selected motor spec. from the catalogue 
-
-% Required motor torque must include efficiency
-% This was used to spec the motor
-RequiredMotorPower = FOSOutputPower/Efficiency;
-RequiredMotorTorque = FOSOutputTorque/Efficiency;
-
-% Based on calculations and with a assumed gearing of x10, this motor was
-% the best fit
-
-motor  = struct('name',     'SIZE 34H2 (86 mm) · 2 phase 1.8° ', ...
-                'output',      10,  ...        % [kW]
-                'speed',      400,  ...        % [rpm]
-                'torque',     4.4,  ...        % [Nm]
-                'price',     1000,  ...        % [USD]
-                'website',  'http://www.kocomotion.de/fileadmin/pages/10_PRODUKTE/Dings/Dings_hybrid-steppermotors.pdf');
-            
-%% Gear design
-% To use and display bending stress, contact stress and safety factor for
-% all gears by using a functions named "gear_bending" and "gear_contact"
-
-%Finding the ratio of output to input
+% Design Decisions
 DesiredGearingRatio = 79; %Picked to achieve scaled down RPM and scaled up torque required
 
-[PinionNumberOfTeeth, GearNumberOfTeeth] = GearTeethCalculator(DesiredGearingRatio,PressureAngle,k,RequiredOutputVelocity);
-PinionNumberOfTeeth;
-GearNumberOfTeeth;
-disp(['PinionNumberOfTeeth:   ' num2str(PinionNumberOfTeeth) ' teeth ']);  
-disp(['GearNumberOfTeeth:   ' num2str(GearNumberOfTeeth) ' teeth ']);  
-ActualGearingRatio = GearNumberOfTeeth/PinionNumberOfTeeth;
+% Calculate Gear & Pinion Teeth Numbers
+[PinionNumberOfTeeth, GearNumberOfTeeth] = GearTeethCalculator(DesiredGearingRatio);
+ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2;
+
+disp('<strong>Gear Tooth Number Selection</strong>');
+disp(['Given our desired total gearing ratio of ' num2str(DesiredGearingRatio, '%i') ' the closest achievable gearing ratio with standard gear sizes is ' num2str(ActualGearingRatio, 4)]);
+disp('This will be implemented using a two-stage speed reducer, with two sets of gearing pairs.');
+disp(['The pinions will have ' num2str(PinionNumberOfTeeth, '%i') ' teeth, and the gears will have ' num2str(GearNumberOfTeeth, '%i') ' teeth ']);
 
 % Resolution Check
-MotorStepSize = 0.72;
-StepAsFractionOfFullRotation = 0.72/360;
-Resolution = StepAsFractionOfFullRotation/(ActualGearingRatio^2)*RollerCircumference;
-disp(['ConveyorBeltResolution:   ' num2str(Resolution) ' mm/step ']); 
-%[B_S1,S_F1] = gear_bending(A,B,C);                                       % Bending stress for gear 1
-%[C_S1,S_F1] = gear_contact(A,BeltWeight,C);                              % Contact stress for gear 1
-%disp(['Bending stress for gear no. 1 is :  ' num2str(B_S1) ' Mpa  ']);   % Display bending stres for gear 1
-%disp(['Contact stress for gear no. 1 is :  ' num2str(C_S1) ' Mpa  ']);   % Display contact stres for gear 1
-%disp(['Safety factor for gear no. 1 is :  ' num2str(S_F1) ' Mpa  ']);    % Display safety factor for gear 1
+outputStepSize = (motor.stepSize/360)*(2*pi*1)/ActualGearingRatio;
+disp(['Using this gearing ratio, the linear resolution capable of the system is ' num2str(outputStepSize) ' [m/step], well below the 0.1 [mm/step] constraint. ']);
+disp(' ');
 
-%% Shaft Design
-%From selected gears, 
-PinionBore = 1.125;
-GearBore = 1.625;
-%Will enventually need to add bearing bore
-LimitingBore = min(GearBore, PinionBore);
-%Shaft Material Constants
-%Current Material : 1050 HR 
-shaftTensileStrength = 620; %MPa
-inchesToM = 25.4/1000;
-ExpectedTorqueOnPinion2=FOSOutputTorque/ActualGearingRatio;
-%Preliminary shaft shear check from smallest bore diameter
-jShaft=pi*(LimitingBore*inchesToM)^4/32;
-shearStress = ExpectedTorqueOnPinion2*(GearBore*inchesToM)/jShaft;
-FOSShearStrength = 0.75*620e6/shearStress;
-disp(['FOSsimpleShearStrength:   ' num2str(FOSShearStrength) '  ']); 
+%% Gear Selection
+% Using the AGMA Stress equations, the FOS for both contact and shear
+% stress are calculated for both gearing sets. For more insight into the
+% AGMA intermediate calculations please read "GearFOS.m"
 
+load Materials.mat; %Load Boston Gear Material Characteristics
+gearSet = struct('PinionMaterial', Materials.CarbonSteel,...    %Define gear-set to be used
+    'GearMaterial', Materials.CastIron,...
+    'PinionPartNumber', 'YK18-10018',...
+    'GearPartNumber', 'YK160B-10770',...
+    'DiametralPitch', 5/25.4,... %mm
+    'PitchAngle', 20,... %Degrees
+    'FaceWidth', 2.5 * 25.4,... %mm
+    'PinionTeeth', 18,...
+    'GearTeeth', 160,...
+    'Quality', 6);
+
+% Analyze Output Gear Set (Gear and Pinion Closest to Output Shaft)
+SpeedOfOutputPinion = reqOutputVelocity * (GearNumberOfTeeth/PinionNumberOfTeeth); % [RPM]
+outputPinionlife = SpeedOfOutputPinion * 60 * 42 * 52 * 10; % [cycles]
+[OutputGearSetAnalysis] = GearFOS (reqOutputPower/0.9, SpeedOfOutputPinion, outputPinionlife, gearSet);
+
+% Analyze Output Gear Set (Gear and Pinion Closest to Input Shaft)
+SpeedOfInputPinion = SpeedOfOutputPinion * (GearNumberOfTeeth/PinionNumberOfTeeth); % [RPM]
+inputPinionlife = SpeedOfInputPinion * 60 * 42 * 52 * 10; % [cycles]
+[InputGearSetAnalysis] = GearFOS (reqOutputPower/0.95, SpeedOfInputPinion, inputPinionlife, gearSet);
+
+disp('<strong>Output Gear-Set FOS Results</strong>');
+disp(['The gear and pinion selected are the ' gearSet.GearPartNumber ' and ' gearSet.PinionPartNumber ', respectively.']);
+disp(['Bending stress for the output pinion is:  ' num2str(OutputGearSetAnalysis(1,1),3) ' [MPa]  ' 'with a FOS of: ' num2str(OutputGearSetAnalysis(1,2),3)]);   %Display bending stres & FOS for Output Pinion
+disp(['Contact stress for the output pinion is:  ' num2str(OutputGearSetAnalysis(1,3),3) ' [MPa]  ' 'with a FOS of: ' num2str(OutputGearSetAnalysis(1,4),3)]);   %Display bending stres & FOS for Output Pinion
+disp(['Bending stress for the output gear is:  ' num2str(OutputGearSetAnalysis(2,1),3) ' [MPa]  ' 'with a FOS of: ' num2str(OutputGearSetAnalysis(2,2),3)]);   %Display bending stres & FOS for Output Pinion
+disp(['Contact stress for the output gear is:  ' num2str(OutputGearSetAnalysis(2,3),3) ' [MPa]  ' 'with a FOS of: ' num2str(OutputGearSetAnalysis(2,4),3)]);   %Display bending stres & FOS for Output Pinion
+disp(' ');
+
+disp('<strong>Input Gear-Set FOS Results</strong>');
+disp(['The gear and pinion selected are the ' gearSet.GearPartNumber ' and ' gearSet.PinionPartNumber ', respectively.']);
+disp(['Bending stress for the input pinion is:  ' num2str(InputGearSetAnalysis(1,1),3) ' [MPa]  ' 'with a FOS of: ' num2str(InputGearSetAnalysis(1,2),3)]);   %Display bending stres & FOS for Output Pinion
+disp(['Contact stress for the input pinion is:  ' num2str(InputGearSetAnalysis(1,3),3) ' [MPa]  ' 'with a FOS of: ' num2str(InputGearSetAnalysis(1,4),3)]);   %Display bending stres & FOS for Output Pinion
+disp(['Bending stress for the input gear is:  ' num2str(InputGearSetAnalysis(2,1),3) ' [MPa]  ' 'with a FOS of: ' num2str(InputGearSetAnalysis(2,2),3)]);   %Display bending stres & FOS for Output Pinion
+disp(['Contact stress for the input gear is:  ' num2str(InputGearSetAnalysis(2,3),3) ' [MPa]  ' 'with a FOS of: ' num2str(InputGearSetAnalysis(2,4),3)]);   %Display bending stres & FOS for Output Pinion
+disp(' ');

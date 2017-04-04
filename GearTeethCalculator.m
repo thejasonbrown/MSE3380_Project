@@ -1,37 +1,38 @@
-function [ PinionNumberOfTeeth, GearNumberOfTeeth ] = GearTeethCalculator( DesiredGearingRatio, PressureAngle, k, RequiredOutputVelocity)
-%Making a 2 stage gearbox with minimal package size, therefore must sqrt
-m = sqrt(DesiredGearingRatio);
+%% Gear Teeth Calculator
+% Using an iterative function, GearTeethCalculator solves for the smallest
+% pinion size that has a zero interference fit with a gear large enough to
+% achieve, at minimum, the desired gearing ratio (using equal gearing in a
+% two stage speed reducer)
 
-%Using formula 13-11 on Page 678
-PotentialGearingRatio=1;
+function [PinionNumberOfTeeth,GearNumberOfTeeth] = GearTeethCalculator(DesiredGearingRatio)
+% Design Assumptions
+PressureAngle = 20;         % [deg]
+k = 1;                      % Full tooth depth
 
-[PinionNumberOfTeeth, MaxGearNumberOfTeeth]=Iterate(PotentialGearingRatio, DesiredGearingRatio, PressureAngle, m);
+% Calculate stage gearing ratio
+m = sqrt(DesiredGearingRatio); % Equal gearing ratio for a two stage speed reducer
 
-% To display values, delete semi-colons
-MaxGearNumberOfTeeth;
-PinionNumberOfTeeth;
+% Output
+PinionNumberOfTeeth=Iterate(DesiredGearingRatio, PressureAngle, m, k);
 GearNumberOfTeeth = round(PinionNumberOfTeeth*m);
-ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2;
-ActualInputSpeed = ActualGearingRatio*RequiredOutputVelocity;
-
 end
 
-function [PinionNumberOfTeeth, MaxGearNumberOfTeeth] = Iterate(PotentialGearingRatio, DesiredGearingRatio, PressureAngle, m)
-
+% Loop until a gearing pairing with zero interference is found, with an
+% appropriate gear ratio
+function [PinionNumberOfTeeth] = Iterate(DesiredGearingRatio, PressureAngle, m, k) %#ok<INUSD>
+PotentialGearingRatio=1;
 while(PotentialGearingRatio<=(DesiredGearingRatio))
     PinionNumberOfTeeth = PinionNumCalc (1,PressureAngle,m);
-    if(PinionNumberOfTeeth==17)
+    if(PinionNumberOfTeeth==17) %skip 17 pinion teeth as it is not a standard size
         PinionNumberOfTeeth=PinionNumberOfTeeth + 1;
     end
     MaxGearNumberOfTeeth = GearNumCalc(1,PinionNumberOfTeeth,PressureAngle);
     if(MaxGearNumberOfTeeth < 0)
-        MaxGearNumberOfTeeth = 'Infinite';
+        MaxGearNumberOfTeeth = 'Infinite'; %#ok<NASGU> 
         break
     end
     PotentialGearingRatio = (MaxGearNumberOfTeeth/PinionNumberOfTeeth)^2;
 end
-
-
 end
 
 function [pinionTeeth] = PinionNumCalc(k,PressureAngle,m)
