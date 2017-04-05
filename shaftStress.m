@@ -1,9 +1,13 @@
-function [ output_args ] = shaftStress( Sut, d, Ma, Mm, Ta, Tm )
+function [ nf, ny ] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm )
 % Function to calculate the stresses for the shaft
 
 % This function takes the shaft's diameter, ultimate tensile strength,
 % and midrange and alternating moments and torques as inputs. It returns
 % the shaft stress
+
+% Convert to kpsi
+Sut = Sut/6.89475728;
+Sy = Sy/6.89475728;
 
 % Shoulder fillet - well rounded
 Kt = 1.7;
@@ -24,12 +28,6 @@ kd = 1;
 ke = 1;
 
 Se = ka*kb*kc*kd*ke*Sut;
-
-%Assuming solid shaft with round cross section:
-alternatingBending = Kf*32*Ma/(pi*d^3);
-midrangeBending = Kf*32*Mm/(pi*d^3);
-alternatingTorque = Kfs*16*Ta/(pi*d^3);
-midrangeTorque = Kfs*16*Tm/(pi*d^3);
 
 % A typical D/d ratio is 1.2, therefore:
 D = 1.2*d;
@@ -52,10 +50,21 @@ end
 % More accurate Se
 Se = ka*kb*kc*kd*ke*Sut;
 
+% Assuming solid shaft with round cross section:
+alternatingBending = Kf*32*Ma/(pi*d^3);
+midrangeBending = Kf*32*Mm/(pi*d^3);
+alternatingTorque = Kfs*16*Ta/(pi*d^3);
+midrangeTorque = Kfs*16*Tm/(pi*d^3);
+
+% Von mises stresses
 alternatingVonMises = (alternatingBending^2 + 3*alternatingTorque^2)^0.5;
 midrangeVonMises = (midrangeBending^2 + 3*midrangeTorque^2)^0.5;
+maxVonMises = ((midrangeBending + alternatingBending)^2 + 3*(midrangeTorque+alternatingTorque)^2)^0.5;
 
 % Goodman Criteria
 nf = (alternatingVonMises/Se + midrangeVonMises/Sut)^-1;
+
+% Check yielding
+ny = Sy/maxVonMises;
 
 end

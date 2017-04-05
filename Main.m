@@ -133,17 +133,16 @@ inchesToM = 25.4/1000;
 PinionBore = 1.125;
 GearBore = 1.625;
 
-% Will enventually need to add bearing bore
+% Design decision
+ShaftFOS = 1.5;
+
+% Will eventually need to add bearing bore
 LimitingBore = min(GearBore, PinionBore);
 
 % Shaft Material Constants
-% Current Material : 1020 CD
+% Current Material : 1020 CD, reasoning contained in report
 shaftMaterialTensileStrength = 470; %MPa
 shaftMaterialYieldStrength = 390; %MPa
 
 ExpectedTorqueOnPinion2=FOSOutputTorque/ActualGearingRatio;
-% Preliminary shaft shear check from smallest bore diameter
-jShaft=pi*(LimitingBore*inchesToM)^4/32;
-shearStress = ExpectedTorqueOnPinion2*(GearBore*inchesToM)/jShaft;
-FOSShearStrength = 0.75*620e6/shearStress;
-disp(['FOSsimpleShearStrength:   ' num2str(FOSShearStrength) '  ']);
+
