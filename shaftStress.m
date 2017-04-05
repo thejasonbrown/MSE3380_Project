@@ -55,8 +55,7 @@ Se = ka*kb*kc*kd*ke*Sut;
 alternatingVonMises = (alternatingBending^2 + 3*alternatingTorque^2)^0.5;
 midrangeVonMises = (midrangeBending^2 + 3*midrangeTorque^2)^0.5;
 
-%Goodman Criteria
+% Goodman Criteria
 nf = (alternatingVonMises/Se + midrangeVonMises/Sut)^-1;
-
 
 end

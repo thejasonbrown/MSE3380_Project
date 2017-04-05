@@ -123,3 +123,27 @@ disp(['Contact stress for the input pinion is:  ' num2str(InputGearSetAnalysis(1
 disp(['Bending stress for the input gear is:  ' num2str(InputGearSetAnalysis(2,1),3) ' [MPa]  ' 'with a FOS of: ' num2str(InputGearSetAnalysis(2,2),3)]);   %Display bending stres & FOS for Output Pinion
 disp(['Contact stress for the input gear is:  ' num2str(InputGearSetAnalysis(2,3),3) ' [MPa]  ' 'with a FOS of: ' num2str(InputGearSetAnalysis(2,4),3)]);   %Display bending stres & FOS for Output Pinion
 disp(' ');
+
+%% Shaft Design
+
+% Conversion Factor
+inchesToM = 25.4/1000;
+
+% From catalogue
+PinionBore = 1.125;
+GearBore = 1.625;
+
+% Will enventually need to add bearing bore
+LimitingBore = min(GearBore, PinionBore);
+
+% Shaft Material Constants
+% Current Material : 1020 CD
+shaftMaterialTensileStrength = 470; %MPa
+shaftMaterialYieldStrength = 390; %MPa
+
+ExpectedTorqueOnPinion2=FOSOutputTorque/ActualGearingRatio;
+% Preliminary shaft shear check from smallest bore diameter
+jShaft=pi*(LimitingBore*inchesToM)^4/32;
+shearStress = ExpectedTorqueOnPinion2*(GearBore*inchesToM)/jShaft;
+FOSShearStrength = 0.75*620e6/shearStress;
+disp(['FOSsimpleShearStrength:   ' num2str(FOSShearStrength) '  ']);
