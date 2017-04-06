@@ -15,10 +15,10 @@ end
 function [zForceBearing1, zForceBearing2,yForceBearing1, yForceBearing2] = BearingReactionForces(ShaftLength,GearMidX, PinionMidX,FyGear,FzGear,FyPinion, FzPinion)
 % This function calculates the gear and pinion torques and positions of a shaft
 % Note: all calculations in this function are done in US Customary Units
-yForceBearing2 = (FyGear*GearMidX+FyPinion*PinionMidX)/ShaftLength;
-zForceBearing2 = (FzGear*GearMidX+FzPinion*PinionMidX)/ShaftLength;
-yForceBearing1 = yForceBearing2+FyGear + FyPinion;
-zForceBearing1 = zForceBearing2+FzGear + FzPinion;
+yForceBearing2 = (-FyGear*GearMidX-FyPinion*PinionMidX)/ShaftLength;
+zForceBearing2 = (-FzGear*GearMidX-FzPinion*PinionMidX)/ShaftLength;
+yForceBearing1 = -yForceBearing2-FyGear - FyPinion;
+zForceBearing1 = -zForceBearing2-FzGear - FzPinion;
 end
 
 function [Shear1, Shear2, Shear3] = ShearDiagram(FGear,FPinion,FBearing1,FBearing2)
@@ -45,7 +45,7 @@ function [MomentG, MomentI, MomentJ, MomentK] = MomentDiagram(Shear1,Shear2,Shea
 %MomentK - Moment at far pinion edge (Highest x value)
 PinionWidth = (PinionMidX -PshoulderX)*2;
 MomentG = Shear1*GearMidX;
-MomentI = MomentG +(PinionMidX-PshoulderX-GearMidX)*(Shear2);
+MomentI = MomentG +(PshoulderX-GearMidX)*(Shear2);
 MomentJ = MomentG +(PinionMidX-GearMidX)*Shear2;
 MomentK = MomentJ + (PinionWidth/2)*Shear3;
 Bearing2Moment = MomentJ + (ShaftLength-PinionMidX)*Shear3;
