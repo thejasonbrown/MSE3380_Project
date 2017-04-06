@@ -9,6 +9,13 @@ function [ nf, ny ] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm )
 Sut = Sut/6.89475728;
 Sy = Sy/6.89475728;
 
+% Find SePrime
+if (Sut <= 200)
+    SePrime = Sut/2;
+elseif (Sut > 200)
+    SePrime = 100;
+end 
+
 % Shoulder fillet - well rounded
 Kt = 1.7;
 Kts = 1.5;
@@ -27,7 +34,7 @@ kc = 1;
 kd = 1;
 ke = 1;
 
-Se = ka*kb*kc*kd*ke*Sut;
+Se = ka*kb*kc*kd*ke*SePrime;
 
 % A typical D/d ratio is 1.2, therefore:
 D = 1.2*d;
@@ -48,7 +55,7 @@ elseif (2 < d <= 10)
 end 
 
 % More accurate Se
-Se = ka*kb*kc*kd*ke*Sut;
+Se = ka*kb*kc*kd*ke*SePrime;
 
 % Assuming solid shaft with round cross section:
 alternatingBending = Kf*32*Ma/(pi*d^3);
