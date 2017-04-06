@@ -1,26 +1,15 @@
 %%Testing moment diagram function
-
-%Gy=197lbf
-%gz=540
-%Py=885lbf
-%Pz=2431
-%shaft length between bearings = 
+%Units force are in lbf
+%Units distance are in inches
 Gy=-197;
 Gz=540;
 Py=-885;
 Pz=-2431;
 ShaftLength=10.75-0.75;
-ShaftLength=ShaftLength/12
 GWidth = 3.5-2;
-GWidth=GWidth/12;
 PWidth=9.5-7.5;
-PWidth=PWidth/12;
 Gshoulder=3.5-0.75;
-Gshoulder=Gshoulder/12;
 Pshoulder=7.5-0.75;
-Pshoulder=Pshoulder/12;
-Gdiameter = 12/12;
-PDiameter = 2.67/12;
 GearMidX = Gshoulder-GWidth/2;
 PinionMidX = Pshoulder+PWidth/2;
 %ComputeMomentDiagram(ShaftLength,FyGear,FzGear,GearMidX, FyPinion,FzPinion,PinionMidX,PinionWidth)

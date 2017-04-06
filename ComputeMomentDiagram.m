@@ -49,7 +49,7 @@ MomentI = MomentG +(PshoulderX-GearMidX)*(Shear2);
 MomentJ = MomentG +(PinionMidX-GearMidX)*Shear2;
 MomentK = MomentJ + (PinionWidth/2)*Shear3;
 Bearing2Moment = MomentJ + (ShaftLength-PinionMidX)*Shear3;
-if (Bearing2Moment~=0)
+if (Bearing2Moment>0.0000001*MomentG)%Making sure that the moment at bearing 2 is a very small amount
     disp('<strong>Something is wrong, moments in the shaft are not balanced</strong>');
 end
 end
