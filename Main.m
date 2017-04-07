@@ -126,6 +126,9 @@ disp(' ');
 
 %% Shaft Design
 
+[ inputShaft, intermediateShaft, outputShaft ] = ShaftLoadings(  );
+
+
 % Conversion Factor
 inchesToM = 25.4/1000;
 
@@ -153,6 +156,12 @@ Tm = 3240;
 [nf, ny] = shaftStress( shaftMaterialTensileStrength, shaftMaterialYieldStrength, BiggerBore, Ma, Mm, Ta, Tm );
 
 %% Bearing Selection
+% Find the catalog load ratings
 
-% Find the catalog load rating 
-C_10
+Btest_C_10 = CatalogueLoadRating(2.5,1.2e6);
+B1_C_10 = CatalogueLoadRating(abs(inputShaft.shear(1,2)),9.9e7);
+B2_C_10 = CatalogueLoadRating(abs(inputShaft.shear(inputShaft.length*1000,2)),9.9e7);
+% B3_C_10 = CatalogueLoadRating(abs(intermediateShaft.shear(1,2)),1.1e7);
+% B4_C_10 = CatalogueLoadRating(abs(intermediateShaft.shear(inputShaft.length*1000,2)),1.1e7);
+% B5_C_10 = CatalogueLoadRating(abs(outputShaft.shear(1,2)),1.2e6);
+% B6_C_10 = CatalogueLoadRating(abs(outputShaft.shear(inputShaft.length*1000,2)),1.2e6);
