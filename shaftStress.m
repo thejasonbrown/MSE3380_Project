@@ -1,11 +1,10 @@
-function [ nf, ny] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm)
+function [ nf, ny] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts)
 % Function to calculate the stresses for the shaft
 
 % This function takes the shaft's diameter, ultimate tensile strength,
 % and midrange and alternating moments and torques as inputs. It returns
 % the shaft stress
-%AlternatingMoment = abs(yMoment-zMoment)/2;
-%MidrangeMoment = (yMoment+zMoment)/2;
+
 
 % Find SePrime
 if (Sut <= 1400)
@@ -35,6 +34,7 @@ qs = (1+rootAs/sqrt(d/2));
 Kfs = 1 + qs*(Kts-1); 
 
 % Assuming solid shaft with round cross section:
+d = d/25.4*1000;
 alternatingBending = Kf*32*Ma/(pi*d^3);
 midrangeBending = Kf*32*Mm/(pi*d^3);
 alternatingTorque = Kfs*16*Ta/(pi*d^3);
