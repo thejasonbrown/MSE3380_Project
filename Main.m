@@ -147,18 +147,163 @@ BiggerBore = max(GearBore, PinionBore);
 Sut = 690; %MPa
 Sy = 580; %MPa
 
-%%This section changes for each crit location
-x=184.65;%input desired critical location x value
-Mom=outputShaft.moments(x*1000,2);
-Ma =abs(real(Mom)-imag(Mom))/2;
+%% Input Shaft
+% Critical Point 1
+% HAND CALC - currently bullshit values
+nf1 = 10;
+ny1 = 10;
+
+% Critical Point 2
+x = 8.65;  %critical location in mm
+Mom = inputShaft.moments(x*1000,2);
+Ma = abs(real(Mom)-imag(Mom))/2;
 Mm = (real(Mom)+imag(Mom))/2;
-d=outputShaft.diameter(x*1000,2);
-Tm= outputShaft.torque; % Nm Change this based on current torque at position given
+d = inputShaft.diameter(x*1000,2);
+Tm = inputShaft.torque; % Nm Change this based on current torque at position given
 Ta = 0;
 %Kt and Kts from Figure A-15-8 & A-15-9
-Kt = 2.8;
-Kts = 2.3;
-[nf,ny] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts)
+Kt = 2.3;
+Kts = 2.05;
+[nf2,ny2] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+% nf2 = round(nf2,2)
+% ny2 = round(ny2,2)
+
+% Critical Point 3
+x = 108.65;  %critical location in mm
+Mom = inputShaft.moments(x*1000,2);
+Ma = abs(real(Mom)-imag(Mom))/2;
+Mm = (real(Mom)+imag(Mom))/2;
+d = inputShaft.diameter(x*1000,2);
+Tm = inputShaft.torque; % Nm Change this based on current torque at position given
+Ta = 0;
+%Kt and Kts from Figure A-15-8 & A-15-9
+Kt = 1.65;
+Kts = 1.45;
+[nf3,ny3] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+% nf3 = round(nf3,2)
+% ny3 = round(ny3,2)
+
+% Critical Point 4
+x = 113.65;  %critical location in mm
+Mom = inputShaft.moments(x*1000,2);
+Ma = abs(real(Mom)-imag(Mom))/2;
+Mm = (real(Mom)+imag(Mom))/2;
+d = inputShaft.diameter(x*1000,2);
+Tm = inputShaft.torque;
+Ta = 0;
+%Kt and Kts from Figure A-15-8 & A-15-9
+Kt = 2.65;
+Kts = 2.1;
+[nf4,ny4] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+% nf4 = round(nf4,2)
+% ny4 = round(ny4,2)
+
+% Critical Point 5
+x = 140;  %critical location in mm
+Mom = inputShaft.moments(x*1000,2);
+Ma = abs(real(Mom)-imag(Mom))/2;
+Mm = (real(Mom)+imag(Mom))/2;
+d = inputShaft.diameter(x*1000,2);
+Tm = inputShaft.torque;
+Ta = 0;
+%Kt and Kts from Figure A-15-8 & A-15-9
+Kt = 1.75;
+Kts = 1.5;
+[nf5,ny5] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+% nf5 = round(nf5,2)
+% ny5 = round(ny5,2)
+
+% Critical Point 6
+x = 144.65;  %critical location in mm
+Mom = inputShaft.moments(x*1000,2);
+Ma = abs(real(Mom)-imag(Mom))/2;
+Mm = (real(Mom)+imag(Mom))/2;
+d = inputShaft.diameter(x*1000,2);
+Tm = inputShaft.torque; % Nm Change this based on current torque at position given
+Ta = 0;
+%Kt and Kts from Figure A-15-8 & A-15-9
+Kt = 2.3;
+Kts = 2.05;
+[nf6,ny6] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+% nf6 = round(nf6,2)
+% ny6 = round(ny6,2)
+
+disp('<strong>Input Shaft Results</strong>');
+disp(['The FOS for critical locations 1-6 are: ' num2str(nf1) ', ' num2str(nf2) ', ' num2str(nf3) ', ' num2str(nf4) ', ' num2str(nf5) ', ' num2str(nf6) ', respectively, using Goodman criteria.']);
+disp(['The yielding factors for critical locations 1-6 are: ' num2str(ny1) ', ' num2str(ny2) ', ' num2str(ny3) ', ' num2str(ny4) ', ' num2str(ny5) ', ' num2str(ny6) ', respectively.']);
+disp(' ');
+
+%% Output Shaft
+
+% Critical Point 13
+x = 4.65;  %critical location in mm
+Mom = outputShaft.moments(x*1000,2);
+Ma = abs(real(Mom)-imag(Mom))/2;
+Mm = (real(Mom)+imag(Mom))/2;
+Tm = outputShaft.torque;
+Ta = 0;
+d = outputShaft.diameter(x*1000,2);     
+%Kt and Kts from Figure A-15-8 & A-15-9
+Kt = 2.3;
+Kts = 2.05;
+[nf13,ny13] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+
+% Critical Point 14
+x = 54.65;  %critical location in mm
+Mom = outputShaft.moments(x*1000,2);
+Ma = abs(real(Mom)-imag(Mom))/2;
+Mm = (real(Mom)+imag(Mom))/2;
+Tm = outputShaft.torque;
+Ta = 0;
+d = outputShaft.diameter(x*1000,2);     
+%Kt and Kts from Figure A-15-8 & A-15-9
+Kt = 1.7;
+Kts = 1.45;
+[nf14,ny14] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+
+% Critical Point 15
+x = 59.65;  %critical location in mm
+Mom = outputShaft.moments(x*1000,2);
+Ma = abs(real(Mom)-imag(Mom))/2;
+Mm = (real(Mom)+imag(Mom))/2;
+Tm = outputShaft.torque;
+Ta = 0;
+d = outputShaft.diameter(x*1000,2);     
+%Kt and Kts from Figure A-15-8 & A-15-9
+Kt = 2.65;
+Kts = 2.1;
+[nf15,ny15] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+
+% Critical Point 16
+x = 179.65;  %critical location in mm
+Mom = outputShaft.moments(x*1000,2);
+Ma = abs(real(Mom)-imag(Mom))/2;
+Mm = (real(Mom)+imag(Mom))/2;
+Tm = outputShaft.torque;
+Ta = 0;
+d = outputShaft.diameter(x*1000,2);     
+%Kt and Kts from Figure A-15-8 & A-15-9
+Kt = 1.6;
+Kts = 1.45;
+[nf16,ny16] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+
+% Critical Point 17
+x = 184.65;  %critical location in mm
+Mom = outputShaft.moments(x*1000,2);
+Ma = abs(real(Mom)-imag(Mom))/2;
+Mm = (real(Mom)+imag(Mom))/2;
+Tm = outputShaft.torque;
+Ta = 0;
+d = outputShaft.diameter(x*1000,2);     
+%Kt and Kts from Figure A-15-8 & A-15-9
+Kt = 2.3;
+Kts = 2.05;
+[nf17,ny17] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+
+disp('<strong>Output Shaft Results</strong>');
+disp(['The FOS for critical locations 1-6 are: ' num2str(nf13) ', ' num2str(nf14) ', ' num2str(nf15) ', ' num2str(nf16) ', and ' num2str(nf17) ', respectively, using Goodman criteria.']);
+disp(['The yielding factors for critical locations 1-6 are: ' num2str(ny13) ', ' num2str(ny14) ', ' num2str(ny15) ', ' num2str(ny16) ', and ' num2str(ny17) ', respectively.']);
+disp(' ');
 
 %% Bearing Selection
 % Find the catalog load ratings
