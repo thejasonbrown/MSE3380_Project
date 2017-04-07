@@ -29,7 +29,8 @@ outputShaft  = struct('name',  'Output Shaft', ...
     'torque', 0,...
     'length', 189.3);
 
-outputShaft.diameter = buildDiameter ([4.65,54.65,59.65,179.65,184.65,189.30],[15,22.5,61.92,41.28,22.50,15]);%Build the ouput shaft profile. 
+BearingDiameter = 25;
+outputShaft.diameter = buildDiameter ([4.65,54.65,59.65,179.65,184.65,189.30],[BearingDiameter,BearingDiameter*1.5,61.92,41.28,BearingDiameter*1.5,BearingDiameter]);%Build the ouput shaft profile. 
 
 
 %Gear Loadings

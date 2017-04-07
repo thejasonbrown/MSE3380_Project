@@ -143,12 +143,12 @@ SmallerBore = min(GearBore, PinionBore);
 BiggerBore = max(GearBore, PinionBore);
 
 % Shaft Material Constants
-% Current Material : 1020 CD, reasoning contained in report
-Sut = 470; %MPa
-Sy = 390; %MPa
+% Current Material : 1050 CD, reasoning contained in report
+Sut = 690; %MPa
+Sy = 580; %MPa
 
 %%This section changes for each crit location
-x=4.65;%input desired critical location x value
+x=184.65;%input desired critical location x value
 Mom=outputShaft.moments(x*1000,2);
 Ma =abs(real(Mom)-imag(Mom))/2;
 Mm = (real(Mom)+imag(Mom))/2;
@@ -166,7 +166,7 @@ Kts = 2.3;
 % Btest_C_10 = CatalogueLoadRating(2.5,1.2e6);
 B1_C_10 = CatalogueLoadRating(abs(inputShaft.shear(1,2)),9.9e7);
 B2_C_10 = CatalogueLoadRating(abs(inputShaft.shear(inputShaft.length*1000,2)),9.9e7);
-B3_C_10 = CatalogueLoadRating(abs(intermediateShaft.shear(1,2)),1.1e7);
-B4_C_10 = CatalogueLoadRating(abs(intermediateShaft.shear(intermediateShaft.length*1000,2)),1.1e7);
-B5_C_10 = CatalogueLoadRating(abs(outputShaft.shear(1,2)),1.2e6);
-B6_C_10 = CatalogueLoadRating(abs(outputShaft.shear(outputShaft.length*1000,2)),1.2e6);
+% B3_C_10 = CatalogueLoadRating(abs(intermediateShaft.shear(1,2)),1.1e7);
+% B4_C_10 = CatalogueLoadRating(abs(intermediateShaft.shear(intermediateShaft.length*1000,2)),1.1e7);
+% B5_C_10 = CatalogueLoadRating(abs(outputShaft.shear(1,2)),1.2e6);
+% B6_C_10 = CatalogueLoadRating(abs(outputShaft.shear(outputShaft.length*1000,2)),1.2e6);

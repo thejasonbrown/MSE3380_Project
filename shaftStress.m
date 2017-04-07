@@ -40,10 +40,10 @@ Kfs = 1 + qs*(Kts-1);
 d = d*25.4/1000;
 
 % Divide by 1e3 to get in MPa
-alternatingBending = Kf*32*Ma/(pi*d^3)/1e3;
-midrangeBending = Kf*32*Mm/(pi*d^3)/1e3;
-alternatingTorque = Kfs*16*Ta/(pi*d^3)/1e3;
-midrangeTorque = Kfs*16*Tm/(pi*d^3)/1e3;
+alternatingBending = Kf*32*Ma/(pi*d^3)/1e6;
+midrangeBending = Kf*32*Mm/(pi*d^3)/1e6;
+alternatingTorque = Kfs*16*Ta/(pi*d^3)/1e6;
+midrangeTorque = Kfs*16*Tm/(pi*d^3)/1e6;
 % Von mises stresses
 alternatingVonMises = (alternatingBending^2 + 3*alternatingTorque^2)^0.5;
 midrangeVonMises = (midrangeBending^2 + 3*midrangeTorque^2)^0.5;
