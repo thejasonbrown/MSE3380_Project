@@ -150,4 +150,10 @@ Mm = 0;
 Ta = 0;
 Tm = 3240;
 
+<<<<<<< Updated upstream
 [nf, ny] = shaftStress( shaftMaterialTensileStrength, shaftMaterialYieldStrength, BiggerBore, Ma, Mm, Ta, Tm );
+=======
+%% Bearing Selection
+
+% Find the catalog load rating 
+>>>>>>> Stashed changes
