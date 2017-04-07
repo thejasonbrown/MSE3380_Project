@@ -146,16 +146,18 @@ BiggerBore = max(GearBore, PinionBore);
 % Current Material : 1020 CD, reasoning contained in report
 Sut = 470; %MPa
 Sy = 390; %MPa
+
 %%This section changes for each crit location
 x=4.65;%input desired critical location x value
 Mom=outputShaft.moments(x*1000,2);
-Ma =abs(real(Mom)-imag(Mom))/2 ;
+Ma =abs(real(Mom)-imag(Mom))/2;
 Mm = (real(Mom)+imag(Mom))/2;
 d=outputShaft.diameter(x*1000,2);
-Tm= outputShaft.torque; % NmChange this based on current torque at position given
+Tm= outputShaft.torque; % Nm Change this based on current torque at position given
 Ta = 0;
-Kt = 5.7;
-Kts = 4;
+%Kt and Kts from Figure A-15-8 & A-15-9
+Kt = 2.8;
+Kts = 2.3;
 [nf,ny] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts)
 
 %% Bearing Selection
