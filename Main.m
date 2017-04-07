@@ -137,12 +137,17 @@ GearBore = 1.625;
 ShaftFOS = 1.5;
 
 % Will eventually need to add bearing bore
-LimitingBore = min(GearBore, PinionBore);
+SmallerBore = min(GearBore, PinionBore);
+BiggerBore = max(GearBore, PinionBore);
 
 % Shaft Material Constants
 % Current Material : 1020 CD, reasoning contained in report
 shaftMaterialTensileStrength = 470; %MPa
 shaftMaterialYieldStrength = 390; %MPa
 
-ExpectedTorqueOnPinion2=FOSOutputTorque/ActualGearingRatio;
+Ma = 3651;
+Mm = 0;
+Ta = 0;
+Tm = 3240;
 
+[nf, ny] = shaftStress( shaftMaterialTensileStrength, shaftMaterialYieldStrength, BiggerBore, Ma, Mm, Ta, Tm )

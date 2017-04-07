@@ -1,19 +1,19 @@
-function [ nf, ny ] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm )
+function [ nf, ny] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm )
 % Function to calculate the stresses for the shaft
 
 % This function takes the shaft's diameter, ultimate tensile strength,
 % and midrange and alternating moments and torques as inputs. It returns
 % the shaft stress
 
-% Convert to kpsi
-Sut = Sut/6.89475728;
-Sy = Sy/6.89475728;
+% Convert to psi
+Sut = Sut/6.89475728*1000;
+Sy = Sy/6.89475728*1000;
 
 % Find SePrime
-if (Sut <= 200)
+if (Sut <= 200000)
     SePrime = Sut/2;
-elseif (Sut > 200)
-    SePrime = 100;
+elseif (Sut > 200000)
+    SePrime = 100000;
 end 
 
 % Shoulder fillet - well rounded
