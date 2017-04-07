@@ -125,7 +125,6 @@ disp(['Contact stress for the input gear is:  ' num2str(InputGearSetAnalysis(2,3
 disp(' ');
 
 %% Shaft Design
-
 [ inputShaft, intermediateShaft, outputShaft ] = ShaftLoadings(  );
 
 
@@ -145,15 +144,19 @@ BiggerBore = max(GearBore, PinionBore);
 
 % Shaft Material Constants
 % Current Material : 1020 CD, reasoning contained in report
-shaftMaterialTensileStrength = 470; %MPa
-shaftMaterialYieldStrength = 390; %MPa
-
-Ma = 3651;
-Mm = 0;
+Sut = 470; %MPa
+Sy = 390; %MPa
+%%This section changes for each crit location
+x=4.65;%input desired critical location x value
+Mom=outputShaft.moments(x*1000,2);
+Ma =abs(real(Mom)-imag(Mom))/2 ;
+Mm = (real(Mom)+imag(Mom))/2;
+d=outputShaft.diameter(x*1000,2);
+Tm= outputShaft.torque; % NmChange this based on current torque at position given
 Ta = 0;
-Tm = 3240;
-
-[nf, ny] = shaftStress( shaftMaterialTensileStrength, shaftMaterialYieldStrength, BiggerBore, Ma, Mm, Ta, Tm );
+Kt = 5.7;
+Kts = 4;
+[nf,ny] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts)
 
 %% Bearing Selection
 % Find the catalog load ratings
