@@ -150,4 +150,4 @@ Mm = 0;
 Ta = 0;
 Tm = 3240;
 
-[nf, ny] = shaftStress( shaftMaterialTensileStrength, shaftMaterialYieldStrength, BiggerBore, Ma, Mm, Ta, Tm )
+[nf, ny] = shaftStress( shaftMaterialTensileStrength, shaftMaterialYieldStrength, BiggerBore, Ma, Mm, Ta, Tm );
