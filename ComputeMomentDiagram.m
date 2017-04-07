@@ -9,7 +9,18 @@ PshoulderX=PinionMidX-PinionWidth/2;
 [Shear1z, Shear2z, Shear3z] = ShearDiagram(FzGear,FzPinion,zForceBearing1,zForceBearing2);
 [yMomentG, yMomentI, yMomentJ, yMomentK] = MomentDiagram(Shear1y,Shear2y,Shear3y,GearMidX,PshoulderX,PinionMidX,ShaftLength);
 [zMomentG, zMomentI, zMomentJ, zMomentK] = MomentDiagram(Shear1z,Shear2z,Shear3z,GearMidX,PshoulderX,PinionMidX,ShaftLength);
-[MomentG, MomentI, MomentJ, MomentK] = TotalMomentDiagram(yMomentG,yMomentI,yMomentJ,yMomentK,zMomentG,zMomentI,zMomentJ,zMomentK);
+[MomentG] = TotalMoment(yMomentG,zMomentG);
+[MomentI] = TotalMoment(yMomentI,zMomentI);
+[MomentJ] = TotalMoment(yMomentJ,zMomentJ);
+[MomentK] = TotalMoment(yMomentK,zMomentK);
+[AlternatingMomentG,MidrangeMomentG] = AlternatingMidrangeMoment(yMomentG,zMomentG); 
+end
+
+function [AlternatingMoment,MidrangeMoment] = AlternatingMidrangeMoment(yMoment,zMoment)
+% This function calculates the gear and pinion torques and positions of a shaft
+% Note: all calculations in this function are done in US Customary Units
+AlternatingMoment = abs(yMoment-zMoment)/2;
+MidrangeMoment = (yMoment+zMoment)/2;
 end
 
 function [zForceBearing1, zForceBearing2,yForceBearing1, yForceBearing2] = BearingReactionForces(ShaftLength,GearMidX, PinionMidX,FyGear,FzGear,FyPinion, FzPinion)
@@ -54,16 +65,8 @@ if (Bearing2Moment>0.0000001*MomentG)%Making sure that the moment at bearing 2 i
 end
 end
 
-function [MomentG, MomentI, MomentJ, MomentK] = TotalMomentDiagram(yMomentG,yMomentI,yMomentJ,yMomentK,zMomentG,zMomentI,zMomentJ,zMomentK)
+function [TotalMoment] = TotalMoment(yMoment,zMoment)
 % This function calculates the gear and pinion torques and positions of a shaft
 % Note: all calculations in this function are done in US Customary Units
-%MomentG - Moment at GearMiddle
-%MomentI - Moment at Pinion Shoulder
-%MomentJ - Moment at PinionMiddle
-%MomentK - Moment at far pinion edge (Highest x value)
-MomentG = sqrt(yMomentG^2+zMomentG^2);
-MomentI = sqrt(yMomentI^2+zMomentI^2);
-MomentJ = sqrt(yMomentJ^2+zMomentJ^2);
-MomentK = sqrt(yMomentK^2+zMomentK^2);
-
+TotalMoment = sqrt(yMoment^2+zMoment^2);
 end
