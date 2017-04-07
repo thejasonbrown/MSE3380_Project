@@ -108,7 +108,7 @@ function [diameter] = buildDiameter(x, d)
 diameter(1,:) = 0:0.001:x(length(x));
 start = 1;
 for i=1:length(d)
-    diameter(2,start:x(i)*1000) = d(i);
+    diameter(2,start:x(i)*1000+1) = d(i);
     start = x(i)*1000;
 end
 diameter = diameter';
