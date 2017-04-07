@@ -1,61 +1,38 @@
-function [ nf, ny] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm )
+function [ nf, ny] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm)
 % Function to calculate the stresses for the shaft
 
 % This function takes the shaft's diameter, ultimate tensile strength,
 % and midrange and alternating moments and torques as inputs. It returns
 % the shaft stress
-
-% Convert to psi
-Sut = Sut/6.89475728*1000;
-Sy = Sy/6.89475728*1000;
+%AlternatingMoment = abs(yMoment-zMoment)/2;
+%MidrangeMoment = (yMoment+zMoment)/2;
 
 % Find SePrime
-if (Sut <= 200000)
+if (Sut <= 1400)
     SePrime = Sut/2;
-elseif (Sut > 200000)
-    SePrime = 100000;
+else
+    SePrime = 700;
 end 
-
-% Shoulder fillet - well rounded
-Kt = 1.7;
-Kts = 1.5;
-
-%For a quick conserative first pass, assume Kf=Kt and Kfs=Kts
-Kf = Kt;
-Kfs = Kts;
 
 %From table
-a = 2.7;
-b = 0.265;
+a = 1.58; 
+b = -0.085;
 
-ka = a*Sut^-b;
-kb = 0.9; % guess
-kc = 1;
-kd = 1;
-ke = 1;
+ka = a*Sut^b; %surface finish factor of ground part
+kb = (d/0.3)^-0.107; % size factor (all under 2 inches)
+kc = 1; %combined or pure bending loading factor (pg 299)
+kd = 1; %Temperature factor (normal bounds)
+ke = 0.814; %reliability factor at 0.99
 
 Se = ka*kb*kc*kd*ke*SePrime;
 
-% A typical D/d ratio is 1.2, therefore:
-D = 1.2*d;
-% Assume a fillet radius r=d/10
-r = d/10;
-
-Kt = 1.6;               % From A-15-9
-q = 0.82;               % From figure 6-20
-Kf = 1 + q*(Kt-1);      % Eqn 6-32
-Kts = 1.35;             % From figure A-15-8
-qs = 0.85;              % From figure 6-21
+SutImp = Sut/6.89475728*1000;
+rootAt = 0.245-3.08e-3*SutImp+1.51e-5*SutImp^2-2.67*10^-8*SutImp^3;
+q = (1+rootAt/sqrt(d/2));
+Kf = 1 + q*(Kt-1);  
+rootAs = 0.190-2.51e-3*SutImp+1.35e-5*SutImp^2-2.67*10^-8*SutImp^3;
+qs = (1+rootAs/sqrt(d/2));
 Kfs = 1 + qs*(Kts-1); 
-
-if (0.11 <= d <= 2)     % Eqn 6-20
-    kb = 0.879*d^-0.107;
-elseif (2 < d <= 10)
-    kb = 0.91*d^-0.157;
-end 
-
-% More accurate Se
-Se = ka*kb*kc*kd*ke*SePrime;
 
 % Assuming solid shaft with round cross section:
 alternatingBending = Kf*32*Ma/(pi*d^3);
