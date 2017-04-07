@@ -16,6 +16,4 @@ R_D = 0.99;          % Desired reliability is 99%
 x_D = L_D/L_R;       % Multiple of rating life equals the desired life over the rated life
 
 C_10 = appFactor*F_D(x_D/(x_0+(theta-x_0)*(1-0.99)^(1/b)))^(1/a);
-
-
 end
