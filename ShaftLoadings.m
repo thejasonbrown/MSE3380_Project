@@ -3,6 +3,7 @@ function [ inputShaft, intermediateShaft, outputShaft ] = ShaftLoadings(  )
 wGear = 125 * -9.81; % check to see if it should be imaginary
 wPinion = 4 * -9.81; % check to see if it should be imaginary
 
+E = 200e9; % E of AISI 1050CD Steel
 
 %Create shaft objects
 inputShaft  = struct('name',  'Input Shaft', ...
@@ -19,11 +20,7 @@ intermediateShaft  = struct('name',  'Intermediate Shaft', ...
     'moments', 0,  ...        %
     'diameter', 0,...
     'torque', 0,...
-<<<<<<< HEAD
     'length', 219.3);
-=======
-    'length', 4);
->>>>>>> 17f6e6568a2ece5532b319310cac3bb74bead9b4
 
 outputShaft  = struct('name',  'Output Shaft', ...
     'forces', 0,...
@@ -37,14 +34,10 @@ outputBearingDiameter = 28;
 outputBearingShoulder = 35;     % Hard coded, found in Excel
 inputBearingDiameter = 16;
 inputBearingShoulder = 20;      % Hard coded, found in Excel
-<<<<<<< HEAD
 outputShaft.diameter = buildDiameter ([4.65,54.65,59.65,179.65,184.65,189.30],[outputBearingDiameter,outputBearingShoulder,61.92,41.28,outputBearingShoulder,outputBearingDiameter]);%Build the output shaft profile.
 inputShaft.diameter = buildDiameter ([4.65,8.65,108.65,113.65,140,144.65],[inputBearingDiameter,inputBearingShoulder,28.58,42.87,inputBearingShoulder,inputBearingDiameter]);%Build the input shaft profile.
 intermediateShaft.diameter = buildDiameter([4.65 9.65 129.65 134.65 159.65 209.65 214.65 219.3], [16 20 41.28 49.53 34.29 28.58 20 16]);
-=======
-outputShaft.diameter = buildDiameter ([4.65,54.65,59.65,179.65,184.65,189.30],[outputBearingDiameter,outputBearingShoulder,61.92,41.28,outputBearingShoulder,outputBearingDiameter]);%Build the output shaft profile. 
-inputShaft.diameter = buildDiameter ([4.65,8.65,108.65,113.65,140,144.65],[inputBearingDiameter,inputBearingShoulder,28.58,42.87,inputBearingShoulder,inputBearingDiameter]);%Build the input shaft profile. 
->>>>>>> 17f6e6568a2ece5532b319310cac3bb74bead9b4
+
 
 %Gear Loadings
 [inPinionForce,inPinionTorque]=shaftLoading(37.71/0.9, 75.4, 18/5, 20);
@@ -82,15 +75,10 @@ inputShaft.moments = momentDiagram(inputShaft.shear);
 outputShaft.moments = momentDiagram(outputShaft.shear);
 intermediateShaft.moments = momentDiagram(intermediateShaft.shear);
 
-<<<<<<< HEAD
 %Add deflection
 [inputShaft.slope, inputShaft.deflection]=getDeflection(inputShaft, E);
 [outputShaft.slope, outputShaft.deflection]=getDeflection(outputShaft, E);
 [intermediateShaft.slope, intermediateShaft.deflection]=getDeflection(intermediateShaft, E);
-=======
-
->>>>>>> 17f6e6568a2ece5532b319310cac3bb74bead9b4
-
 
 end
 
