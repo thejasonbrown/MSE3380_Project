@@ -1,7 +1,6 @@
 function [ slope, deflection ] = getDeflection( shaft, E )
-
-dslope(:,1) = shaft.moments(:,1)/1000;
-dslope(:,2) = shaft.moments(:,2)./(E * (pi*(shaft.diameter(:,2)/1000).^4/64));
+dslope(:,1) = shaft.moments(:,1);
+dslope(:,2) = shaft.moments(:,2)./(E * shaft.diameter(:,2));
 
 slope (:,1) = dslope(:,1);
 slope (:,2) = cumtrapz(dslope(:,1),dslope(:,2));
