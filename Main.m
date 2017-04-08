@@ -292,4 +292,4 @@ B2_C_10 = CatalogueLoadRating(abs(inputShaft.shear(inputShaft.length*1000,2)),9.
 
 %% Critical Speed
 
-inputCritical = CriticalSpeed(inputShaft.diameter(),inputShaft.forces(),inputShaft.getDeflection());
+inputCritical = CriticalSpeed(inputShaft.diameter(),inputShaft.forces(),inputShaft.deflection());

@@ -17,9 +17,9 @@ den = 0;
 %% Equations
 
 % Find shaft's intrinsic critical speed in [rad/s]
-for i=1,length(diameter)
-num = num + (diameter(i,2)/2)^2*pi*density*1e-6*deflection(i,2);     % numerator summation
-den = den + (diameter(i,2)/2)^2*pi*density*1e-6*deflection(i,2)^2;        % denominator summation
+for i=1:length(diameter)
+num = num + (diameter(i,2)/2)^2*pi*density*1e-6*deflection(i,2);       % numerator summation
+den = den + (diameter(i,2)/2)^2*pi*density*1e-6*deflection(i,2)^2;     % denominator summation
 end
 
 w_shaft = sqrt(9.81*num/den);   % the critical speed of the shaft [rad/s]
