@@ -289,3 +289,7 @@ B2_C_10 = CatalogueLoadRating(abs(inputShaft.shear(inputShaft.length*1000,2)),9.
 % B4_C_10 = CatalogueLoadRating(abs(intermediateShaft.shear(intermediateShaft.length*1000,2)),1.1e7);
 % B5_C_10 = CatalogueLoadRating(abs(outputShaft.shear(1,2)),1.2e6);
 % B6_C_10 = CatalogueLoadRating(abs(outputShaft.shear(outputShaft.length*1000,2)),1.2e6);
+
+%% Critical Speed
+
+inputCritical = CriticalSpeed(inputShaft.diameter(),inputShaft.forces(),inputShaft.getDeflection());
