@@ -55,7 +55,7 @@ inputShaft.torque = inPinionTorque;
 outputShaft.torque = outGearTorque;
 intermediateShaft.torque = inGearTorque;
 
-inputShaftGearLoadings = [1 100; 2 200];%[2 inPinionForce+wPinion; 3 inPinionForce+wPinion; 3.5 inPinionForce+wPinion];
+inputShaftGearLoadings = [69.1 inPinionForce+wPinion];
 intermediateShaftGearLoadings = [97.9 inGearForce+wGear; 191.4 outPinionForce+wPinion];
 outputShaftGearLoadings = [91.4 outGearForce+wGear];
 
