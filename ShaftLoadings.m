@@ -19,7 +19,7 @@ intermediateShaft  = struct('name',  'Intermediate Shaft', ...
     'moments', 0,  ...        %
     'diameter', 0,...
     'torque', 0,...
-    'length', 4);
+    'length', 219.3);
 
 outputShaft  = struct('name',  'Output Shaft', ...
     'forces', 0,...
@@ -31,11 +31,14 @@ outputShaft  = struct('name',  'Output Shaft', ...
 
 inputBearingDiameter = 16;
 inputBearingShoulder = 20;      % Hard coded, found in Excel
+intermediateBearingDiameter = 16;
+intermediateBearingShoulder = 20;      % Hard coded, found in Excel
 outputBearingDiameter = 28;
 outputBearingShoulder = 35;     % Hard coded, found in Excel
 
 %Build the shaft profiles
 inputShaft.diameter = buildDiameter ([4.65,8.65,108.65,113.65,140,144.65],[inputBearingDiameter,inputBearingShoulder,28.58,42.87,inputBearingShoulder,inputBearingDiameter]);
+intermediateShaft.diameter = buildDiameter ([4.65 9.65 129.65 134.65 159.65 209.65 214.65 219.3],[intermediateBearingDiameter,intermediateBearingShoulder,41.28,49.53,34.29,28.58,intermediateBearingShoulder,intermediateBearingDiameter]);
 outputShaft.diameter = buildDiameter ([4.65,54.65,59.65,179.65,184.65,189.30],[outputBearingDiameter,outputBearingShoulder,61.92,41.28,outputBearingShoulder,outputBearingDiameter]);
 
 %Gear Loadings
