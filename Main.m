@@ -227,7 +227,7 @@ end
 intermediateShaftGoodman = [intermediateShaftGoodman; nf1];
 intermediateShaftYield = [intermediateShaftYield; ny1];
 
-disp('<strong>Input Shaft Results</strong>');
+disp('<strong>Intermediate Shaft Results</strong>');
 disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(intermediateShaftArray)) ' are:']);
 for i=1:length(intermediateShaftGoodman)
     disp(['  ' num2str(intermediateShaftGoodman(i)) '  ' num2str(intermediateShaftYield(i))]);
@@ -271,7 +271,7 @@ end
 outputShaftGoodman = [outputShaftGoodman; nf1];
 outputShaftYield = [outputShaftYield; ny1];
 
-disp('<strong>Input Shaft Results</strong>');
+disp('<strong>Output Shaft Results</strong>');
 disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(outputShaftArray)) ' are:']);
 for i=1:length(outputShaftGoodman)
     disp(['  ' num2str(outputShaftGoodman(i)) '  ' num2str(outputShaftYield(i))]);
