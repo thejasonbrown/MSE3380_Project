@@ -24,7 +24,7 @@ intermediateShaft  = struct('name',  'Intermediate Shaft', ...
     'deflection', 0,  ...   
     'diameter', 0,...  
     'torque', 0,...
-    'length', 4);
+    'length', 219.3);
 
 outputShaft  = struct('name',  'Output Shaft', ...
     'forces', 0,...
@@ -42,6 +42,7 @@ inputBearingDiameter = 16;
 inputBearingShoulder = 20;      % Hard coded, found in Excel
 outputShaft.diameter = buildDiameter ([4.65,54.65,59.65,179.65,184.65,189.30],[outputBearingDiameter,outputBearingShoulder,61.92,41.28,outputBearingShoulder,outputBearingDiameter]);%Build the output shaft profile.
 inputShaft.diameter = buildDiameter ([4.65,8.65,108.65,113.65,140,144.65],[inputBearingDiameter,inputBearingShoulder,28.58,42.87,inputBearingShoulder,inputBearingDiameter]);%Build the input shaft profile.
+intermediateShaft.diameter = buildDiameter([4.65 9.65 129.65 134.65 159.65 209.65 214.65 219.3], [16 20 41.28 49.53 34.29 28.58 20 16]);
 
 %Gear Loadings
 [inPinionForce,inPinionTorque]=shaftLoading(37.71/0.9, 75.4, 18/5, 20);
@@ -52,9 +53,10 @@ inputShaft.diameter = buildDiameter ([4.65,8.65,108.65,113.65,140,144.65],[input
 %Assign Gear Loadings
 inputShaft.torque = inPinionTorque;
 outputShaft.torque = outGearTorque;
+intermediateShaft.torque = inGearTorque;
 
 inputShaftGearLoadings = [1 100; 2 200];%[2 inPinionForce+wPinion; 3 inPinionForce+wPinion; 3.5 inPinionForce+wPinion];
-intermediateShaftGearLoadings = [3 inGearForce+wGear; 4 outPinionForce+wPinion];
+intermediateShaftGearLoadings = [97.9 inGearForce+wGear; 191.4 outPinionForce+wPinion];
 outputShaftGearLoadings = [91.4 outGearForce+wGear];
 
 %Calculate Bearing Reactions
@@ -65,20 +67,23 @@ outputShaftReactions = reactionForces(outputShaftGearLoadings, outputShaft.lengt
 %Assign Forces
 inputShaft.forces = buildForces(inputShaftReactions, inputShaftGearLoadings, inputShaft.length);
 outputShaft.forces = buildForces(outputShaftReactions, outputShaftGearLoadings, outputShaft.length);
+intermediateShaft.forces = buildForces(intermediateShaftReactions, intermediateShaftGearLoadings, intermediateShaft.length);
 
 
 %Create Shear Diagrams
 inputShaft.shear = shearDiagram(inputShaft.forces);
 outputShaft.shear = shearDiagram(outputShaft.forces);
+intermediateShaft.shear = shearDiagram(intermediateShaft.forces);
 
 %Create Moment Diagram
 inputShaft.moments = momentDiagram(inputShaft.shear);
 outputShaft.moments = momentDiagram(outputShaft.shear);
+intermediateShaft.moments = momentDiagram(intermediateShaft.shear);
 
 %Add deflection
 [inputShaft.slope, inputShaft.deflection]=getDeflection(inputShaft, E);
 [outputShaft.slope, outputShaft.deflection]=getDeflection(outputShaft, E);
-
+[intermediateShaft.slope, intermediateShaft.deflection]=getDeflection(intermediateShaft, E);
 
 
 end
@@ -106,7 +111,7 @@ V = (pitchDiameter*25.4/1000) * (RPM*pi/60);
 wt = power/V;
 
 shear = wt + 1i* wt * sind(pitchAngle);
-torque = power/(RPM*2*pi/60);
+torque = power/(RPM/(60*2*pi));
 end
 
 function [r] = reactionForces(shearLoadings, length)
