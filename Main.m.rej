@@ -1,218 +1,271 @@
 diff a/Main.m b/Main.m	(rejected hunks)
-@@ -1,108 +0,109 @@
--%% PROJECT      Stepper Motor Gearbox Design
--%
--% Group No.     9    
--% Members       Michael Gerard Allan, Jason Michael Brown, Kaspar Shah Shahzada, Joshua Graham Underwood
--% Course        Mechanical Components Design for Mechatronic Systems (MSE 3380)
--% Instructor    Prof. Dr. Aaron Price
--% Department    Mechanical & Materials Engineering
--% Faculty       Engineering
--% Institution   Western University
--% Date          March 17, 2017
+@@ -153,130 +153,156 @@
+ nf1 = 10;
+ ny1 = 10;
+ 
+-% Remaining Critical Points
+-%Array of variables - x, Kt, Kts
+-inputShaftArray = [8.65, 108.65, 113.65, 140, 144.65; ...
+-    2.3 1.65 2.65 1.75 2.3; 2.05 1.45 2.1 1.5 2.05];
 -
--%% Clear workspace
--close all
--evalin('caller','clear all');
--feature('accel','on')
--clc
+-inputShaftGoodman = zeros(length(inputShaftArray),1);
+-inputShaftYield = zeros(length(inputShaftArray),1);
 -
--%% Design constraints
--% To insert design contrain values
++% Critical Point 2
++x = 8.65;  %critical location in mm
++Mom = inputShaft.moments(x*1000,2);
++Ma = abs(real(Mom)-imag(Mom))/2;
++Mm = (real(Mom)+imag(Mom))/2;
++d = inputShaft.diameter(x*1000,2);
++Tm = inputShaft.torque; % Nm Change this based on current torque at position given
++Ta = 0;
++%Kt and Kts from Figure A-15-8 & A-15-9
++Kt = 2.3;
++Kts = 2.05;
++[nf2,ny2] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
++% nf2 = round(nf2,2)
++% ny2 = round(ny2,2)
++
++% Critical Point 3
++x = 108.65;  %critical location in mm
++Mom = inputShaft.moments(x*1000,2);
++Ma = abs(real(Mom)-imag(Mom))/2;
++Mm = (real(Mom)+imag(Mom))/2;
++d = inputShaft.diameter(x*1000,2);
++Tm = inputShaft.torque; % Nm Change this based on current torque at position given
++Ta = 0;
++%Kt and Kts from Figure A-15-8 & A-15-9
++Kt = 1.65;
++Kts = 1.45;
++[nf3,ny3] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
++% nf3 = round(nf3,2)
++% ny3 = round(ny3,2)
++
++% Critical Point 4
++x = 113.65;  %critical location in mm
++Mom = inputShaft.moments(x*1000,2);
++Ma = abs(real(Mom)-imag(Mom))/2;
++Mm = (real(Mom)+imag(Mom))/2;
++d = inputShaft.diameter(x*1000,2);
+ Tm = inputShaft.torque;
+ Ta = 0;
 -
--%Conveyor Parameters
--BeltMass = 75;              % kg (Weight of the conveyor belt)
--ConveyorLength = 6;           % m (Length of top edge of conveyor)
--Friction = 0.12;              % (Coefficeint of friction)
+-for i=1:length(inputShaftArray)
+-    x = inputShaftArray(1,i);
+-    Mom = inputShaft.moments(x*1000,2);
+-    Ma = abs(real(Mom)-imag(Mom))/2;
+-    Mm = (real(Mom)+imag(Mom))/2;
+-    d = inputShaft.diameter(x*1000,2);
+-    Kt = inputShaftArray(2,i);
+-    Kts = inputShaftArray(3,i);
+-    [inputShaftGoodman(i), inputShaftYield(i)] = shaftStress(Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+-    % UNCOMMENT WHEN USING A MATLAB VERSION THAT IS NOT ANCIENT AND HAS
+-    % THIS CAPABILITY
+-    % inputShaftGoodman(i) = round(inputShaftGoodman(i),2);
+-    % inputShaftYield(i) = round(inputShaftYield(i),2);
+-end
 -
--%Blank Parameters
--BlankThickness = 0.006;       % m (Thickness of blank)
--BlankLength = 2.5;            % m (Length of blank)
--BlankWidth = 0.815;           % m (Width of blank)
--SteelDensity = 7850;          % kg/m^3 (Density of 1050 carbon steel) (http://www.azom.com/article.aspx?ArticleID=6526)
--BlankMass = BlankThickness*BlankLength*BlankWidth*SteelDensity;  %kg (Mass of one blank)
+-% MUST ACCOUNT FOR HAND CALC TOO
+-inputShaftGoodman = [inputShaftGoodman; nf1];
+-inputShaftYield = [inputShaftYield; ny1];
 -
--%Miscellaneous Parameters
--nBlanks = 2;                  % Number of blanks on conveyor at a time (1 blank is equivalent to all the blades cut from it)
--BlankLoad = BlankMass*nBlanks; %kg (Total mass of all blanks on conveyor)
+-disp('<strong>Input Shaft Results</strong>');
+-disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(inputShaftArray)) ' are:']);
+-for i=1:length(inputShaftGoodman)
+-    disp(['  ' num2str(inputShaftGoodman(i)) '  ' num2str(inputShaftYield(i))]);
+-end 
 -
+-disp(' ');
 -
+-%% Intermediate Shaft
+-% Last Critical Point on output shaft
+-% HAND CALC - currently bullshit values
+-nf18 = 10;
+-ny18 = 10;
 -
--%% First design assumptions
--% To insert the value for any assumed value other than design constrains ones
+-% Remaining Critical Points
+-%Array of variables - x, Kt, Kts
+-intermediateShaftArray = [9.65 129.65 134.65 159.65 209.65 214.65 219.3; ...
+-    1.65 2.9 1.6 2.6 1.6 2.6 2.5; 1.4 2.4 1.35 2.2 1.35 2.3 2.2];
 -
--Speed = 0.1;                      % m/s (Conveyer Speed )
--Efficiency = 0.9;                 % 90 percent efficiency
--Reliability = 0.99;               % 99 percent reliability
+-intermediateShaftGoodman = zeros(length(intermediateShaftArray),1);
+-intermediateShaftYield = zeros(length(intermediateShaftArray),1);
 -
--%Roller Parameters (Using Conveyor Roller Model 2013 found here:
--%http://www.rolmasterconveyors.ca/products/conveyor-rollers/)
--RollerRadius = 0.0254;            % m (radius of roller = 1 inch)
--RollerLength = 0.815;             % m (given)
--RollerDensity = 7850;             % kg/m^3 (assume same density as blanks)
--nRollers = 2;                     % Number of rollers in the conveyor
--Jroller = pi()*RollerDensity*RollerLength*((RollerRadius*2)^2)/32;
+-Tm = intermediateShaft.torque;
++%Kt and Kts from Figure A-15-8 & A-15-9
++Kt = 2.65;
++Kts = 2.1;
++[nf4,ny4] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
++% nf4 = round(nf4,2)
++% ny4 = round(ny4,2)
++
++% Critical Point 5
++x = 140;  %critical location in mm
++Mom = inputShaft.moments(x*1000,2);
++Ma = abs(real(Mom)-imag(Mom))/2;
++Mm = (real(Mom)+imag(Mom))/2;
++d = inputShaft.diameter(x*1000,2);
++Tm = inputShaft.torque;
+ Ta = 0;
 -
+-for i=1:length(intermediateShaftArray)
+-    x = intermediateShaftArray(1,i);
+-    Mom = intermediateShaft.moments(x*1000,2);
+-    Ma = abs(real(Mom)-imag(Mom))/2;
+-    Mm = (real(Mom)+imag(Mom))/2;
+-    d = intermediateShaft.diameter(x*1000,2);
+-    Kt = intermediateShaftArray(2,i);
+-    Kts = intermediateShaftArray(3,i);
+-    [intermediateShaftGoodman(i), intermediateShaftYield(i)] = shaftStress(Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+-    % UNCOMMENT WHEN USING A MATLAB VERSION THAT IS NOT ANCIENT AND HAS
+-    % THIS CAPABILITY
+-    % intermediateShaftGoodman(i) = round(intermediateShaftGoodman(i),2);
+-    % intermediateShaftYield(i) = round(intermediateShaftYield(i),2);
+-end
 -
--%% Required power
--% To use a defined function titled "output_power" to calculate and display
--% required power and torque for the motor as well as respective speed
+-% MUST ACCOUNT FOR HAND CALC TOO
+-intermediateShaftGoodman = [intermediateShaftGoodman; nf1];
+-intermediateShaftYield = [intermediateShaftYield; ny1];
++%Kt and Kts from Figure A-15-8 & A-15-9
++Kt = 1.75;
++Kts = 1.5;
++[nf5,ny5] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
++% nf5 = round(nf5,2)
++% ny5 = round(ny5,2)
++
++% Critical Point 6
++x = 144.65;  %critical location in mm
++Mom = inputShaft.moments(x*1000,2);
++Ma = abs(real(Mom)-imag(Mom))/2;
++Mm = (real(Mom)+imag(Mom))/2;
++d = inputShaft.diameter(x*1000,2);
++Tm = inputShaft.torque; % Nm Change this based on current torque at position given
++Ta = 0;
++%Kt and Kts from Figure A-15-8 & A-15-9
++Kt = 2.3;
++Kts = 2.05;
++[nf6,ny6] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
++% nf6 = round(nf6,2)
++% ny6 = round(ny6,2)
+ 
+ disp('<strong>Input Shaft Results</strong>');
+-disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(intermediateShaftArray)) ' are:']);
+-for i=1:length(intermediateShaftGoodman)
+-    disp(['  ' num2str(intermediateShaftGoodman(i)) '  ' num2str(intermediateShaftYield(i))]);
+-end 
 -
--[RequiredOutputPower,RequiredOutputTorque,RequiredOutputVelocity] = output_power(BlankLoad,BeltMass,Jroller,nRollers,RollerRadius,Speed,Friction);                        % Required output power, Torque and Speed
--disp(['Required output power:  ' num2str(RequiredOutputPower) ' kW  ']);              % Display the required output power
--disp(['Required output torque: ' num2str(RequiredOutputTorque) ' N.m ']);              % Display the required output torque
--disp(['Required speed:   ' num2str(RequiredOutputVelocity) ' rpm ']);                     % Display the required speed
++disp(['The FOS for critical locations 1-6 are: ' num2str(nf1) ', ' num2str(nf2) ', ' num2str(nf3) ', ' num2str(nf4) ', ' num2str(nf5) ', ' num2str(nf6) ', respectively, using Goodman criteria.']);
++disp(['The yielding factors for critical locations 1-6 are: ' num2str(ny1) ', ' num2str(ny2) ', ' num2str(ny3) ', ' num2str(ny4) ', ' num2str(ny5) ', ' num2str(ny6) ', respectively.']);
+ disp(' ');
+ 
+ %% Output Shaft
+-% Last Critical Point on output shaft
+-% HAND CALC - currently bullshit values
+-nf18 = 10;
+-ny18 = 10;
 -
--%% Motor choice
--% To show the selected motor spec. from the catalogue 
+-% Remaining Critical Points
+-%Array of variables - x, Kt, Kts
+-outputShaftArray = [4.65 54.65 59.65 179, 184.65; ...
+-    2.3 1.7 2.65 1.6 2.3; 2.05 1.45 2.1 1.45 2.05];
 -
+-outputShaftGoodman = zeros(length(outputShaftArray),1);
+-outputShaftYield = zeros(length(outputShaftArray),1);
+ 
++% Critical Point 13
++x = 4.65;  %critical location in mm
++Mom = outputShaft.moments(x*1000,2);
++Ma = abs(real(Mom)-imag(Mom))/2;
++Mm = (real(Mom)+imag(Mom))/2;
+ Tm = outputShaft.torque;
+ Ta = 0;
 -
--%Based on calculations and with a assumed gearing of x10, this motor was
--%the best fit
+-for i=1:length(outputShaftArray)
+-    x = outputShaftArray(1,i);
+-    Mom = outputShaft.moments(x*1000,2);
+-    Ma = abs(real(Mom)-imag(Mom))/2;
+-    Mm = (real(Mom)+imag(Mom))/2;
+-    d = outputShaft.diameter(x*1000,2);
+-    Kt = outputShaftArray(2,i);
+-    Kts = outputShaftArray(3,i);
+-    [outputShaftGoodman(i), outputShaftYield(i)] = shaftStress(Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+-    % UNCOMMENT WHEN USING A MATLAB VERSION THAT IS NOT ANCIENT AND HAS
+-    % THIS CAPABILITY
+-    % outputShaftGoodman(i) = round(outputShaftGoodman(i),2);
+-    % outputShaftYield(i) = round(outputShaftYield(i),2);
+-end
 -
--motor  = struct('name',     'SIZE 34H2 (86 mm) � 2 phase 1.8� ', ...
--                'output',      10,  ...        % [kW]
--                'speed',      400,  ...        % [rpm]
--                'torque',     4.4,  ...        % [Nm]
--                'price',     1000,  ...        % [USD]
--                'website',  'http://www.kocomotion.de/fileadmin/pages/10_PRODUKTE/Dings/Dings_hybrid-steppermotors.pdf');
--            
+-% MUST ACCOUNT FOR HAND CALC TOO
+-outputShaftGoodman = [outputShaftGoodman; nf1];
+-outputShaftYield = [outputShaftYield; ny1];
 -
+-disp('<strong>Input Shaft Results</strong>');
+-disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(outputShaftArray)) ' are:']);
+-for i=1:length(outputShaftGoodman)
+-    disp(['  ' num2str(outputShaftGoodman(i)) '  ' num2str(outputShaftYield(i))]);
+-end 
 -
--%% Gear design
--% To use and display bending stress, contact stress and safety factor for
--% all gears by using a functions named "gear_bending" and "gear_contact"
--
--%Finding the ratio of output to input
--DesiredGearingRatio = 1/16
--;%picked because of design choices
--PossibleInputSpeed = RequiredOutputVelocity * DesiredGearingRatio;
--%Making a 2 stage gearbox with minimal package size, therefore must sqrt
--Ratio1 = sqrt(DesiredGearingRatio);
--k = 1; %picked because of design choices
--PressureAngle = 20; %picked because of design choices
--m = 1/Ratio1;
--%Using formula 13-11 on Page 678
--PinionNumberOfTeeth = round(2*k/((1+2*m)*(sind(PressureAngle))^2)*(m+sqrt(m^2+(1+2*m)*(sind(PressureAngle))^2))) %15
--GearNumberOfTeeth = round(PinionNumberOfTeeth * m) %47
--
--%15 and 47 are both common numbers of teeth according to:
--%http://opis.cz/cross-morse/pdf/StandardGears.pdf
--ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2
--ActualInputSpeed = ActualGearingRatio*RequiredOutputVelocity
--
--
-+%% PROJECT      Stepper Motor Gearbox Design
-+%
-+% Group No.     9    
-+% Members       Michael Gerard Allan, Jason Michael Brown, Kaspar Shah Shahzada, Joshua Graham Underwood
-+% Course        Mechanical Components Design for Mechatronic Systems (MSE 3380)
-+% Instructor    Prof. Dr. Aaron Price
-+% Department    Mechanical & Materials Engineering
-+% Faculty       Engineering
-+% Institution   Western University
-+% Date          March 17, 2017
++d = outputShaft.diameter(x*1000,2);     
++%Kt and Kts from Figure A-15-8 & A-15-9
++Kt = 2.3;
++Kts = 2.05;
++[nf13,ny13] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
 +
-+%% Clear workspace
-+close all
-+evalin('caller','clear all');
-+feature('accel','on')
-+clc
++% Critical Point 14
++x = 54.65;  %critical location in mm
++Mom = outputShaft.moments(x*1000,2);
++Ma = abs(real(Mom)-imag(Mom))/2;
++Mm = (real(Mom)+imag(Mom))/2;
++Tm = outputShaft.torque;
++Ta = 0;
++d = outputShaft.diameter(x*1000,2);     
++%Kt and Kts from Figure A-15-8 & A-15-9
++Kt = 1.7;
++Kts = 1.45;
++[nf14,ny14] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
 +
-+%% Design constraints
-+% To insert design contrain values
++% Critical Point 15
++x = 59.65;  %critical location in mm
++Mom = outputShaft.moments(x*1000,2);
++Ma = abs(real(Mom)-imag(Mom))/2;
++Mm = (real(Mom)+imag(Mom))/2;
++Tm = outputShaft.torque;
++Ta = 0;
++d = outputShaft.diameter(x*1000,2);     
++%Kt and Kts from Figure A-15-8 & A-15-9
++Kt = 2.65;
++Kts = 2.1;
++[nf15,ny15] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
 +
-+%Conveyor Parameters
-+BeltMass = 75;              % kg (Weight of the conveyor belt)
-+ConveyorLength = 6;           % m (Length of top edge of conveyor)
-+Friction = 0.12;              % (Coefficeint of friction)
++% Critical Point 16
++x = 179.65;  %critical location in mm
++Mom = outputShaft.moments(x*1000,2);
++Ma = abs(real(Mom)-imag(Mom))/2;
++Mm = (real(Mom)+imag(Mom))/2;
++Tm = outputShaft.torque;
++Ta = 0;
++d = outputShaft.diameter(x*1000,2);     
++%Kt and Kts from Figure A-15-8 & A-15-9
++Kt = 1.6;
++Kts = 1.45;
++[nf16,ny16] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
 +
-+%Blank Parameters
-+BlankThickness = 0.006;       % m (Thickness of blank)
-+BlankLength = 2.5;            % m (Length of blank)
-+BlankWidth = 0.815;           % m (Width of blank)
-+SteelDensity = 7850;          % kg/m^3 (Density of 1050 carbon steel) (http://www.azom.com/article.aspx?ArticleID=6526)
-+BlankMass = BlankThickness*BlankLength*BlankWidth*SteelDensity;  %kg (Mass of one blank)
++% Critical Point 17
++x = 184.65;  %critical location in mm
++Mom = outputShaft.moments(x*1000,2);
++Ma = abs(real(Mom)-imag(Mom))/2;
++Mm = (real(Mom)+imag(Mom))/2;
++Tm = outputShaft.torque;
++Ta = 0;
++d = outputShaft.diameter(x*1000,2);     
++%Kt and Kts from Figure A-15-8 & A-15-9
++Kt = 2.3;
++Kts = 2.05;
++[nf17,ny17] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
 +
-+%Miscellaneous Parameters
-+nBlanks = 2;                  % Number of blanks on conveyor at a time (1 blank is equivalent to all the blades cut from it)
-+BlankLoad = BlankMass*nBlanks; %kg (Total mass of all blanks on conveyor)
-+
-+
-+
-+%% First design assumptions
-+% To insert the value for any assumed value other than design constrains ones
-+
-+Speed = 0.1;                      % m/s (Conveyer Speed )
-+Efficiency = 0.9;                 % 90 percent efficiency
-+Reliability = 0.99;               % 99 percent reliability
-+
-+%Roller Parameters (Using Conveyor Roller Model 2013 found here:
-+%http://www.rolmasterconveyors.ca/products/conveyor-rollers/)
-+RollerRadius = 0.0254;            % m (radius of roller = 1 inch)
-+RollerLength = 0.815;             % m (given)
-+RollerDensity = 7850;             % kg/m^3 (assume same density as blanks)
-+nRollers = 2;                     % Number of rollers in the conveyor
-+Jroller = pi()*RollerDensity*RollerLength*((RollerRadius*2)^2)/32;
-+
-+
-+%% Required power
-+% To use a defined function titled "output_power" to calculate and display
-+% required power and torque for the motor as well as respective speed
-+
-+[RequiredOutputPower,RequiredOutputTorque,RequiredOutputVelocity] = output_power(BlankLoad,BeltMass,Jroller,nRollers,RollerRadius,Speed,Friction);                        % Required output power, Torque and Speed
-+disp(['Required output power:  ' num2str(RequiredOutputPower) ' kW  ']);              % Display the required output power
-+disp(['Required output torque: ' num2str(RequiredOutputTorque) ' N.m ']);              % Display the required output torque
-+disp(['Required speed:   ' num2str(RequiredOutputVelocity) ' rpm ']);                     % Display the required speed
-+
-+%% Motor choice
-+% To show the selected motor spec. from the catalogue 
-+
-+
-+%Based on calculations and with a assumed gearing of x10, this motor was
-+%the best fit
-+
-+motor  = struct('name',     'SIZE 34H2 (86 mm) � 2 phase 1.8� ', ...
-+                'output',      10,  ...        % [kW]
-+                'speed',      400,  ...        % [rpm]
-+                'torque',     4.4,  ...        % [Nm]
-+                'price',     1000,  ...        % [USD]
-+                'website',  'http://www.kocomotion.de/fileadmin/pages/10_PRODUKTE/Dings/Dings_hybrid-steppermotors.pdf');
-+            
-+
-+
-+%% Gear design
-+% To use and display bending stress, contact stress and safety factor for
-+% all gears by using a functions named "gear_bending" and "gear_contact"
-+
-+%Finding the ratio of output to input
-+DesiredGearingRatio = 1/16
-+;%picked because of design choices
- %[B_S1,S_F1] = gear_bending(A,B,C);                                   % Bending stress for gear 1
--%[C_S1,S_F1] = gear_contact(A,BeltWeight,C);                                   % Contact stress for gear 1
--%disp(['Bending stress for gear no. 1 is :  ' num2str(B_S1) ' Mpa  ']);   % Display bending stres for gear 1
--%disp(['Contact stress for gear no. 1 is :  ' num2str(C_S1) ' Mpa  ']);   % Display contact stres for gear 1
--%disp(['Safety factor for gear no. 1 is :  ' num2str(S_F1) ' Mpa  ']);    % Display safety factor for gear 1
--
-+PossibleInputSpeed = RequiredOutputVelocity * DesiredGearingRatio;
-+%Making a 2 stage gearbox with minimal package size, therefore must sqrt
-+Ratio1 = sqrt(DesiredGearingRatio);
-+k = 1; %picked because of design choices
-+PressureAngle = 20; %picked because of design choices
-+m = 1/Ratio1;
-+%Using formula 13-11 on Page 678
-+PinionNumberOfTeeth = round(2*k/((1+2*m)*(sind(PressureAngle))^2)*(m+sqrt(m^2+(1+2*m)*(sind(PressureAngle))^2))) %15
-+GearNumberOfTeeth = round(PinionNumberOfTeeth * m) %47
-+
-+%15 and 47 are both common numbers of teeth according to:
-+%http://opis.cz/cross-morse/pdf/StandardGears.pdf
-+ActualGearingRatio = (GearNumberOfTeeth/PinionNumberOfTeeth)^2
-+ActualInputSpeed = ActualGearingRatio*RequiredOutputVelocity
-+
-+
-+%[B_S1,S_F1] = gear_bending(A,B,C);                                   % Bending stress for gear 1
-+%[C_S1,S_F1] = gear_contact(A,BeltWeight,C);                                   % Contact stress for gear 1
-+%disp(['Bending stress for gear no. 1 is :  ' num2str(B_S1) ' Mpa  ']);   % Display bending stres for gear 1
-+%disp(['Contact stress for gear no. 1 is :  ' num2str(C_S1) ' Mpa  ']);   % Display contact stres for gear 1
-+%disp(['Safety factor for gear no. 1 is :  ' num2str(S_F1) ' Mpa  ']);    % Display safety factor for gear 1
-+
++disp('<strong>Output Shaft Results</strong>');
++disp(['The FOS for critical locations 1-6 are: ' num2str(nf13) ', ' num2str(nf14) ', ' num2str(nf15) ', ' num2str(nf16) ', and ' num2str(nf17) ', respectively, using Goodman criteria.']);
++disp(['The yielding factors for critical locations 1-6 are: ' num2str(ny13) ', ' num2str(ny14) ', ' num2str(ny15) ', ' num2str(ny16) ', and ' num2str(ny17) ', respectively.']);
+ disp(' ');
+ 
+ %% Bearing Selection
