@@ -3,29 +3,36 @@ function [ inputShaft, intermediateShaft, outputShaft ] = ShaftLoadings(  )
 wGear = 125 * -9.81; % check to see if it should be imaginary
 wPinion = 4 * -9.81; % check to see if it should be imaginary
 
+E = 200e9; % [Pa] AISI 1050 CD Steel
 
 %Create shaft objects
 inputShaft  = struct('name',  'Input Shaft', ...
-    'forces', 0,...
-    'shear', 0,...
-    'moments', 0,  ...        %
-    'diameter', 0,...
-    'torque', 0,...
-    'length', 144.65);
+    'forces', 0,... % [N]
+    'shear', 0,... % [N]
+    'moments', 0,  ...   % [N.m]
+    'slope', 0,  ...   % [rad]
+    'deflection', 0,  ...   % [mm]
+    'diameter', 0,...   % [mm]
+    'torque', 0,... % [N*m]
+    'length', 144.65); % [mm]
 
 intermediateShaft  = struct('name',  'Intermediate Shaft', ...
     'forces', 0,...
     'shear', 0,...
-    'moments', 0,  ...        %
-    'diameter', 0,...
+    'moments', 0,  ...        
+    'slope', 0,  ... 
+    'deflection', 0,  ...   
+    'diameter', 0,...  
     'torque', 0,...
     'length', 4);
 
 outputShaft  = struct('name',  'Output Shaft', ...
     'forces', 0,...
     'shear', 0,...
-    'moments', 0,  ...        %
-    'diameter', 0,...
+    'moments', 0,  ... 
+    'slope', 0,  ...   
+    'deflection', 0,  ...  
+    'diameter', 0,...   
     'torque', 0,...
     'length', 189.3);
 
@@ -33,8 +40,8 @@ outputBearingDiameter = 28;
 outputBearingShoulder = 35;     % Hard coded, found in Excel
 inputBearingDiameter = 16;
 inputBearingShoulder = 20;      % Hard coded, found in Excel
-outputShaft.diameter = buildDiameter ([4.65,54.65,59.65,179.65,184.65,189.30],[outputBearingDiameter,outputBearingShoulder,61.92,41.28,outputBearingShoulder,outputBearingDiameter]);%Build the output shaft profile. 
-inputShaft.diameter = buildDiameter ([4.65,8.65,108.65,113.65,140,144.65],[inputBearingDiameter,inputBearingShoulder,28.58,42.87,inputBearingShoulder,inputBearingDiameter]);%Build the input shaft profile. 
+outputShaft.diameter = buildDiameter ([4.65,54.65,59.65,179.65,184.65,189.30],[outputBearingDiameter,outputBearingShoulder,61.92,41.28,outputBearingShoulder,outputBearingDiameter]);%Build the output shaft profile.
+inputShaft.diameter = buildDiameter ([4.65,8.65,108.65,113.65,140,144.65],[inputBearingDiameter,inputBearingShoulder,28.58,42.87,inputBearingShoulder,inputBearingDiameter]);%Build the input shaft profile.
 
 %Gear Loadings
 [inPinionForce,inPinionTorque]=shaftLoading(37.71/0.9, 75.4, 18/5, 20);
@@ -68,6 +75,9 @@ outputShaft.shear = shearDiagram(outputShaft.forces);
 inputShaft.moments = momentDiagram(inputShaft.shear);
 outputShaft.moments = momentDiagram(outputShaft.shear);
 
+%Add deflection
+[inputShaft.slope, inputShaft.deflection]=getDeflection(inputShaft, E);
+[outputShaft.slope, outputShaft.deflection]=getDeflection(outputShaft, E);
 
 
 
@@ -77,18 +87,18 @@ function [ moment ] = momentDiagram (shear)
 moment = zeros(size(shear,1),2);
 moment(:,1) = shear(:,1);
 moment(1,2) = 0;
-    for i=2:size(moment,1)
-        moment(i,2) = moment(i-1,2)+shear(i,2)*0.001/1000;
-    end
+for i=2:size(moment,1)
+    moment(i,2) = moment(i-1,2)+shear(i,2)*0.001/1000;
+end
 end
 
 function [ shear ] = shearDiagram (forces)
 shear = zeros(size(forces,1),2);
 shear(:,1) = forces(:,1);
 shear(1,2) = -forces(1,2);
-    for i=2:size(shear,1)
-        shear(i,2) = shear(i-1,2)-forces(i,2);
-    end
+for i=2:size(shear,1)
+    shear(i,2) = shear(i-1,2)-forces(i,2);
+end
 end
 
 function [ shear, torque ] = shaftLoading( power, RPM, pitchDiameter, pitchAngle)
