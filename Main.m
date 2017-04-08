@@ -153,156 +153,86 @@ Sy = 580; %MPa
 nf1 = 10;
 ny1 = 10;
 
-% Critical Point 2
-x = 8.65;  %critical location in mm
-Mom = inputShaft.moments(x*1000,2);
-Ma = abs(real(Mom)-imag(Mom))/2;
-Mm = (real(Mom)+imag(Mom))/2;
-d = inputShaft.diameter(x*1000,2);
-Tm = inputShaft.torque; % Nm Change this based on current torque at position given
-Ta = 0;
-%Kt and Kts from Figure A-15-8 & A-15-9
-Kt = 2.3;
-Kts = 2.05;
-[nf2,ny2] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
-% nf2 = round(nf2,2)
-% ny2 = round(ny2,2)
+% Remaining Critical Points
+%Array of variables - x, Kt, Kts
+inputShaftArray = [8.65, 108.65, 113.65, 140, 144.65; ...
+    2.3 1.65 2.65 1.75 2.3; 2.05 1.45 2.1 1.5 2.05];
 
-% Critical Point 3
-x = 108.65;  %critical location in mm
-Mom = inputShaft.moments(x*1000,2);
-Ma = abs(real(Mom)-imag(Mom))/2;
-Mm = (real(Mom)+imag(Mom))/2;
-d = inputShaft.diameter(x*1000,2);
-Tm = inputShaft.torque; % Nm Change this based on current torque at position given
-Ta = 0;
-%Kt and Kts from Figure A-15-8 & A-15-9
-Kt = 1.65;
-Kts = 1.45;
-[nf3,ny3] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
-% nf3 = round(nf3,2)
-% ny3 = round(ny3,2)
+inputShaftGoodman = zeros(length(inputShaftArray),1);
+inputShaftYield = zeros(length(inputShaftArray),1);
 
-% Critical Point 4
-x = 113.65;  %critical location in mm
-Mom = inputShaft.moments(x*1000,2);
-Ma = abs(real(Mom)-imag(Mom))/2;
-Mm = (real(Mom)+imag(Mom))/2;
-d = inputShaft.diameter(x*1000,2);
 Tm = inputShaft.torque;
 Ta = 0;
-%Kt and Kts from Figure A-15-8 & A-15-9
-Kt = 2.65;
-Kts = 2.1;
-[nf4,ny4] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
-% nf4 = round(nf4,2)
-% ny4 = round(ny4,2)
 
-% Critical Point 5
-x = 140;  %critical location in mm
-Mom = inputShaft.moments(x*1000,2);
-Ma = abs(real(Mom)-imag(Mom))/2;
-Mm = (real(Mom)+imag(Mom))/2;
-d = inputShaft.diameter(x*1000,2);
-Tm = inputShaft.torque;
-Ta = 0;
-%Kt and Kts from Figure A-15-8 & A-15-9
-Kt = 1.75;
-Kts = 1.5;
-[nf5,ny5] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
-% nf5 = round(nf5,2)
-% ny5 = round(ny5,2)
+for i=1:length(inputShaftArray)
+    x = inputShaftArray(1,i);
+    Mom = inputShaft.moments(x*1000,2);
+    Ma = abs(real(Mom)-imag(Mom))/2;
+    Mm = (real(Mom)+imag(Mom))/2;
+    d = inputShaft.diameter(x*1000,2);
+    Kt = inputShaftArray(2,i);
+    Kts = inputShaftArray(3,i);
+    [inputShaftGoodman(i), inputShaftYield(i)] = shaftStress(Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+    % UNCOMMENT WHEN USING A MATLAB VERSION THAT IS NOT ANCIENT AND HAS
+    % THIS CAPABILITY
+    % inputShaftGoodman(i) = round(inputShaftGoodman(i),2);
+    % inputShaftYield(i) = round(inputShaftYield(i),2);
+end
 
-% Critical Point 6
-x = 144.65;  %critical location in mm
-Mom = inputShaft.moments(x*1000,2);
-Ma = abs(real(Mom)-imag(Mom))/2;
-Mm = (real(Mom)+imag(Mom))/2;
-d = inputShaft.diameter(x*1000,2);
-Tm = inputShaft.torque; % Nm Change this based on current torque at position given
-Ta = 0;
-%Kt and Kts from Figure A-15-8 & A-15-9
-Kt = 2.3;
-Kts = 2.05;
-[nf6,ny6] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
-% nf6 = round(nf6,2)
-% ny6 = round(ny6,2)
+% MUST ACCOUNT FOR HAND CALC TOO
+inputShaftGoodman = [inputShaftGoodman; nf1];
+inputShaftYield = [inputShaftYield; ny1];
 
 disp('<strong>Input Shaft Results</strong>');
-disp(['The FOS for critical locations 1-6 are: ' num2str(nf1) ', ' num2str(nf2) ', ' num2str(nf3) ', ' num2str(nf4) ', ' num2str(nf5) ', ' num2str(nf6) ', respectively, using Goodman criteria.']);
-disp(['The yielding factors for critical locations 1-6 are: ' num2str(ny1) ', ' num2str(ny2) ', ' num2str(ny3) ', ' num2str(ny4) ', ' num2str(ny5) ', ' num2str(ny6) ', respectively.']);
+disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(inputShaftArray)) ' are:']);
+for i=1:length(inputShaftGoodman)
+    disp(['  ' num2str(inputShaftGoodman(i)) '  ' num2str(inputShaftYield(i))]);
+end 
+
 disp(' ');
 
 %% Output Shaft
+% Last Critical Point on output shaft
+% HAND CALC - currently bullshit values
+nf18 = 10;
+ny18 = 10;
 
-% Critical Point 13
-x = 4.65;  %critical location in mm
-Mom = outputShaft.moments(x*1000,2);
-Ma = abs(real(Mom)-imag(Mom))/2;
-Mm = (real(Mom)+imag(Mom))/2;
+% Remaining Critical Points
+%Array of variables - x, Kt, Kts
+outputShaftArray = [4.65 54.65 59.65 179, 184.65; ...
+    2.3 1.7 2.65 1.6 2.3; 2.05 1.45 2.1 1.45 2.05];
+
+outputShaftGoodman = zeros(length(outputShaftArray),1);
+outputShaftYield = zeros(length(outputShaftArray),1);
+
 Tm = outputShaft.torque;
 Ta = 0;
-d = outputShaft.diameter(x*1000,2);     
-%Kt and Kts from Figure A-15-8 & A-15-9
-Kt = 2.3;
-Kts = 2.05;
-[nf13,ny13] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
 
-% Critical Point 14
-x = 54.65;  %critical location in mm
-Mom = outputShaft.moments(x*1000,2);
-Ma = abs(real(Mom)-imag(Mom))/2;
-Mm = (real(Mom)+imag(Mom))/2;
-Tm = outputShaft.torque;
-Ta = 0;
-d = outputShaft.diameter(x*1000,2);     
-%Kt and Kts from Figure A-15-8 & A-15-9
-Kt = 1.7;
-Kts = 1.45;
-[nf14,ny14] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+for i=1:length(outputShaftArray)
+    x = outputShaftArray(1,i);
+    Mom = outputShaft.moments(x*1000,2);
+    Ma = abs(real(Mom)-imag(Mom))/2;
+    Mm = (real(Mom)+imag(Mom))/2;
+    d = outputShaft.diameter(x*1000,2);
+    Kt = outputShaftArray(2,i);
+    Kts = outputShaftArray(3,i);
+    [outputShaftGoodman(i), outputShaftYield(i)] = shaftStress(Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+    % UNCOMMENT WHEN USING A MATLAB VERSION THAT IS NOT ANCIENT AND HAS
+    % THIS CAPABILITY
+    % outputShaftGoodman(i) = round(outputShaftGoodman(i),2);
+    % outputShaftYield(i) = round(outputShaftYield(i),2);
+end
 
-% Critical Point 15
-x = 59.65;  %critical location in mm
-Mom = outputShaft.moments(x*1000,2);
-Ma = abs(real(Mom)-imag(Mom))/2;
-Mm = (real(Mom)+imag(Mom))/2;
-Tm = outputShaft.torque;
-Ta = 0;
-d = outputShaft.diameter(x*1000,2);     
-%Kt and Kts from Figure A-15-8 & A-15-9
-Kt = 2.65;
-Kts = 2.1;
-[nf15,ny15] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+% MUST ACCOUNT FOR HAND CALC TOO
+outputShaftGoodman = [outputShaftGoodman; nf1];
+outputShaftYield = [outputShaftYield; ny1];
 
-% Critical Point 16
-x = 179.65;  %critical location in mm
-Mom = outputShaft.moments(x*1000,2);
-Ma = abs(real(Mom)-imag(Mom))/2;
-Mm = (real(Mom)+imag(Mom))/2;
-Tm = outputShaft.torque;
-Ta = 0;
-d = outputShaft.diameter(x*1000,2);     
-%Kt and Kts from Figure A-15-8 & A-15-9
-Kt = 1.6;
-Kts = 1.45;
-[nf16,ny16] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+disp('<strong>Input Shaft Results</strong>');
+disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(outputShaftArray)) ' are:']);
+for i=1:length(outputShaftGoodman)
+    disp(['  ' num2str(outputShaftGoodman(i)) '  ' num2str(outputShaftYield(i))]);
+end 
 
-% Critical Point 17
-x = 184.65;  %critical location in mm
-Mom = outputShaft.moments(x*1000,2);
-Ma = abs(real(Mom)-imag(Mom))/2;
-Mm = (real(Mom)+imag(Mom))/2;
-Tm = outputShaft.torque;
-Ta = 0;
-d = outputShaft.diameter(x*1000,2);     
-%Kt and Kts from Figure A-15-8 & A-15-9
-Kt = 2.3;
-Kts = 2.05;
-[nf17,ny17] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
-
-disp('<strong>Output Shaft Results</strong>');
-disp(['The FOS for critical locations 1-6 are: ' num2str(nf13) ', ' num2str(nf14) ', ' num2str(nf15) ', ' num2str(nf16) ', and ' num2str(nf17) ', respectively, using Goodman criteria.']);
-disp(['The yielding factors for critical locations 1-6 are: ' num2str(ny13) ', ' num2str(ny14) ', ' num2str(ny15) ', ' num2str(ny16) ', and ' num2str(ny17) ', respectively.']);
 disp(' ');
 
 %% Bearing Selection
