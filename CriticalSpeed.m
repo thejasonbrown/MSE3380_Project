@@ -25,7 +25,10 @@ end
 w_shaft = sqrt(9.81*num/den);   % the critical speed of the shaft [rad/s]
 
 % Find first critical speed due to loading
-
+for i=1:length(diameter)
+num = num + (diameter(i,2)/2)^2*pi*density*1e-6*deflection(i,2);       % numerator summation
+den = den + (diameter(i,2)/2)^2*pi*density*1e-6*deflection(i,2)^2;     % denominator summation
+end
 
 omega = w_shaft*60/(2*pi);      % the critical speed in [rpm]
 end
