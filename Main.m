@@ -300,6 +300,23 @@ Kt = 2.3;
 Kts = 2.05;
 [nf17,ny17] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
 
+% Critical Point 18 - This is the last retaining ring groove on the output
+% shaft
+x=4.65;%For the bearing
+Mom = 0 ; %Because it is outside the bearings. 
+Ma = abs(real(Mom)-imag(Mom))/2;
+Mm = (real(Mom)+imag(Mom))/2;
+Tm = outputShaft.torque;
+Ta = 0;
+d = outputShaft.diameter(x*1000,2)-0.35;     
+%a=1.1;
+%t=0.35;
+%r=0.3
+%Kt and Kts from Figure A-15-16 & A-15-17
+Kt = 2.5; 
+Kts = 1; %off the graph A-15-17, assumed 1  
+[nf18,ny18] = shaftStress( Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
+
 disp('<strong>Output Shaft Results</strong>');
 disp(['The FOS for critical locations 1-6 are: ' num2str(nf13) ', ' num2str(nf14) ', ' num2str(nf15) ', ' num2str(nf16) ', and ' num2str(nf17) ', respectively, using Goodman criteria.']);
 disp(['The yielding factors for critical locations 1-6 are: ' num2str(ny13) ', ' num2str(ny14) ', ' num2str(ny15) ', ' num2str(ny16) ', and ' num2str(ny17) ', respectively.']);
