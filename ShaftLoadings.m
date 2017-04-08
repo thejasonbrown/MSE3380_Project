@@ -111,7 +111,7 @@ V = (pitchDiameter*25.4/1000) * (RPM*pi/60);
 wt = power/V;
 
 shear = wt + 1i* wt * sind(pitchAngle);
-torque = power/(RPM/(60*2*pi));
+torque = power/((RPM*2*pi)/(60));
 end
 
 function [r] = reactionForces(shearLoadings, length)
