@@ -1,0 +1,372 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>FOS Calculator</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-22"><meta name="DC.source" content="FOS.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>FOS Calculator</h1><!--introduction--><p>Function takes in two gear and the loading scenario to calculate FOS</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Inputs</a></li><li><a href="#2">Processing</a></li><li><a href="#3">SECTION TITLE</a></li><li><a href="#4">Auxilary Functions</a></li><li><a href="#5">Max Bending Stress Calculator</a></li><li><a href="#6">Max Contact Stress Calculator</a></li><li><a href="#7">Dynamic Factor Calculator</a></li><li><a href="#8">Form Factor Lookup</a></li><li><a href="#9">Load Distribution Factor Calculator</a></li><li><a href="#10">Pit Resistance Calculator</a></li><li><a href="#11">Elastic Coefficient</a></li><li><a href="#12">Size Factor Calculator</a></li></ul></div><h2 id="1">Inputs</h2><pre class="codeinput"><span class="comment">%Gear Info</span>
+material = struct(<span class="string">'Name'</span>, <span class="string">'Steel'</span>,<span class="keyword">...</span>
+    <span class="string">'H'</span>, 200,<span class="keyword">...</span>
+    <span class="string">'Grade'</span>, 1,<span class="keyword">...</span>
+    <span class="string">'E'</span>, 210e3,<span class="keyword">...</span>
+    <span class="string">'v'</span>, 0.3);
+gearSet = struct(<span class="string">'Material'</span>, material,<span class="keyword">...</span>
+    <span class="string">'DiametralPitch'</span>, 0.4,<span class="keyword">...</span><span class="comment"> %mm</span>
+    <span class="string">'PitchAngle'</span>, 20,<span class="keyword">...</span><span class="comment"> %Degrees</span>
+    <span class="string">'FaceWidth'</span>, 18,<span class="keyword">...</span><span class="comment"> %mm</span>
+    <span class="string">'PinionTeeth'</span>, 20,<span class="keyword">...</span>
+    <span class="string">'GearTeeth'</span>, 36,<span class="keyword">...</span>
+    <span class="string">'Quality'</span>, 6);
+
+clear <span class="string">material</span>;
+
+<span class="comment">%load condition</span>
+operatingConditions = <span class="string">'CE'</span>; <span class="comment">%**************ABC for Kh</span>
+power = 120; <span class="comment">%watts</span>
+nPinion = 100; <span class="comment">%RPM</span>
+
+<span class="comment">%Service Requirements</span>
+life = 10^8;
+reliability = 0.99;
+</pre><h2 id="2">Processing</h2><pre class="codeinput"><span class="comment">%Determine Auxilary Values</span>
+dPinion = gearSet.PinionTeeth/gearSet.DiametralPitch; <span class="comment">%diameter of pinion [mm]</span>
+V = pi * (dPinion / 1000) * (nPinion / 60); <span class="comment">% pitch line velocity [m/s]</span>
+gearRatio = gearSet.GearTeeth/gearSet.PinionTeeth;
+
+<span class="comment">%Calculate Tooth Stress Coefficients</span>
+wt = power/V; <span class="comment">%Newtons</span>
+Kv = DynamicFactor(gearSet.Quality, V); <span class="comment">%Dynamic Factor</span>
+Ks = SizeFactor(gearSet); <span class="comment">%Size Factor</span>
+Kh = 1.27;<span class="comment">%***********LoadDistributionFactor(fwPinion, diametralPitch*tPinion);</span>
+Kb = 1; <span class="comment">%Rim-Thickness Factor</span>
+Yj = [0.33 0.038]; <span class="comment">%****************Hard coded for now * Geometric Bending Strength</span>
+Zi = PitResistanceExtSpur(gearSet.PitchAngle, gearRatio); <span class="comment">%Geometric Pitting Resistance</span>
+Ze = ElasticCoefficient(gearSet.Material); <span class="comment">%Material-Material Gear Modulus</span>
+
+<span class="comment">%Calculate Tooth Stresses [MPa]</span>
+bendingStressPinion = wt * K0 * Kv * Ks(1) * (gearSet.DiametralPitch/gearSet.FaceWidth) * (Kh * Kb)/Yj(1)
+bendingStressGear = wt * K0 * Kv * Ks(2) * (gearSet.DiametralPitch/gearSet.FaceWidth) * (Kh * Kb)/Yj(2)
+contactStressPinion = Ze *  sqrt(wt * K0 * Kv * Ks(1) * (Kh/((gearSet.PinionTeeth / gearSet.DiametralPitch) * gearSet.FaceWidth)) * (Zr/Zi))
+contactStressGear = (Ks(2)/Ks(1))^0.5 * contactStressPinion
+
+<span class="comment">%Calculate FOS Coefficients</span>
+Y0 = 1;
+Zr = 1;
+
+St = GetMaxAllowableBendingStress(gearSet.Material); <span class="comment">%MPa</span>
+Sc = GetMaxAllowableContactStress(gearSet.Material); <span class="comment">%MPa</span>
+</pre><h2 id="3">SECTION TITLE</h2><p>DESCRIPTIVE TEXT</p><h2 id="4">Auxilary Functions</h2><p>Lookup Functions</p><h2 id="5">Max Bending Stress Calculator</h2><pre class="codeinput"><span class="keyword">function</span> [St] = GetMaxAllowableBendingStress (material)
+h  = material.H;
+g = material.Grade;
+<span class="keyword">if</span>(g == 1) <span class="comment">%Figure 14-2</span>
+    St = 0.553 * h + 88.3; <span class="comment">%MPa</span>
+<span class="keyword">elseif</span> (g == 2)
+    St = 0.703 * h + 113; <span class="comment">%MPa</span>
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2 id="6">Max Contact Stress Calculator</h2><pre class="codeinput"><span class="keyword">function</span> [Sc] = GetMaxAllowableContactStress (material)
+h  = material.H;
+g = material.Grade;
+<span class="keyword">if</span>(g == 1) <span class="comment">%Figure 14-2</span>
+    Sc = 2.22 * h + 200; <span class="comment">%MPa</span>
+<span class="keyword">elseif</span> (g == 2)
+    Sc = 2.41 * h + 237; <span class="comment">%MPa</span>
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2 id="7">Dynamic Factor Calculator</h2><pre class="codeinput"><span class="keyword">function</span> [ Kv ] = DynamicFactor( Qv, vel )
+<span class="comment">%Calculate Dynamic Factor</span>
+b = 0.25 * (12 - Qv)^(2/3); <span class="comment">%Eqn 14-28</span>
+a = 50 + 56 *(1 - b); <span class="comment">%Eqn 14-28</span>
+
+Kv = ((a + sqrt(200*vel))/a)^b; <span class="comment">%Eqn 14-27</span>
+<span class="keyword">end</span>
+</pre><h2 id="8">Form Factor Lookup</h2><pre class="codeinput"><span class="keyword">function</span> [ Y ] = FormFactor(teeth)
+<span class="keyword">if</span>(teeth&gt;400)
+    Y = 0.485;
+<span class="keyword">else</span>
+    load <span class="string">FormFactorTable.mat</span>; <span class="comment">%Table 14-2</span>
+    Y = interp1(FormFactorTable(:,1)', FormFactorTable(:,2)', teeth);
+<span class="keyword">end</span>
+clear <span class="string">FormFactorTable</span>
+<span class="keyword">end</span>
+</pre><h2 id="9">Load Distribution Factor Calculator</h2><pre class="codeinput"><span class="keyword">function</span> [Kh] = LoadDistributionFactor(F, d)
+Fd = F/(10*d);
+<span class="keyword">if</span> (Fd &lt; 0.05)
+    Fd = 0.05;
+<span class="keyword">end</span>
+
+<span class="comment">%Find Cpf</span>
+<span class="keyword">if</span> (F &lt;=1)
+    Cpf=(Fd-0.025);
+<span class="keyword">elseif</span> (F &lt;= 17)
+    Cpf=(Fd-0.0375+0.0125*F);
+<span class="keyword">elseif</span> (F&lt;=40)
+    Cpf=(Fd-0.1109+0.0207*F-0.000228*F^2);
+<span class="keyword">end</span>
+Cmc = 1; <span class="comment">%for uncrowned teeth</span>
+Cpm = 1; <span class="comment">%straddle-mounted</span>
+Cma = 0.127 + 0.0158 * F - 0.930 * 10^-4 * F^2; <span class="comment">%commercial enclosed unit</span>
+Ce = 1; <span class="comment">% gearing is not adjusted at assembly, nor compatibility is improved by lapping</span>
+<span class="comment">%**************Needs ABC lookup table for Cma</span>
+Kh = 1 + Cmc*(Cpf*Cpm+Cma*Ce);
+<span class="keyword">end</span>
+</pre><h2 id="10">Pit Resistance Calculator</h2><pre class="codeinput"><span class="keyword">function</span> [Zi] = PitResistanceExtSpur(pitchAngle, gearRatio)
+Zi = ((cosd(pitchAngle)*sind(pitchAngle)) / 2) * (gearRatio/(gearRatio + 1)); <span class="comment">%External Spur (mN = 1)</span>
+<span class="keyword">end</span>
+</pre><h2 id="11">Elastic Coefficient</h2><pre class="codeinput"><span class="keyword">function</span> [Ze] = ElasticCoefficient(material)
+E = material.E;
+v = material.v;
+<span class="comment">%Assume same material for pinion and gear</span>
+Ze = sqrt(E / (2 * pi * (1 - v^2)));
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">
+bendingStressPinion =
+
+   43.2037
+
+
+bendingStressGear =
+
+  376.7896
+
+
+contactStressPinion =
+
+  503.4317
+
+
+contactStressGear =
+
+  504.5036
+
+</pre><h2 id="12">Size Factor Calculator</h2><pre class="codeinput"><span class="keyword">function</span> [Ks] = SizeFactor(gearSet)
+<span class="comment">%Form Factors</span>
+Yp = FormFactor(gearSet.PinionTeeth);
+Yg = FormFactor(gearSet.GearTeeth);
+
+KsP = 0.8433 * (gearSet.FaceWidth * sqrt(Yp) / gearSet.DiametralPitch)^0.0535;
+KsG = 0.8433 * (gearSet.FaceWidth * sqrt(Yg) / gearSet.DiametralPitch)^0.0535;
+
+Ks = [KsP KsG];
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% FOS Calculator
+% Function takes in two gear and the loading scenario to calculate FOS
+
+%% Inputs
+%Gear Info
+material = struct('Name', 'Steel',...
+    'H', 200,...
+    'Grade', 1,...
+    'E', 210e3,...
+    'v', 0.3);
+gearSet = struct('Material', material,...
+    'DiametralPitch', 0.4,... %mm
+    'PitchAngle', 20,... %Degrees
+    'FaceWidth', 18,... %mm
+    'PinionTeeth', 20,...
+    'GearTeeth', 36,...
+    'Quality', 6);
+
+clear material;
+
+%load condition
+operatingConditions = 'CE'; %**************ABC for Kh
+power = 120; %watts
+nPinion = 100; %RPM
+
+%Service Requirements
+life = 10^8;
+reliability = 0.99;
+
+%% Processing
+
+%Determine Auxilary Values
+dPinion = gearSet.PinionTeeth/gearSet.DiametralPitch; %diameter of pinion [mm]
+V = pi * (dPinion / 1000) * (nPinion / 60); % pitch line velocity [m/s]
+gearRatio = gearSet.GearTeeth/gearSet.PinionTeeth;
+
+%Calculate Tooth Stress Coefficients
+wt = power/V; %Newtons
+Kv = DynamicFactor(gearSet.Quality, V); %Dynamic Factor
+Ks = SizeFactor(gearSet); %Size Factor
+Kh = 1.27;%***********LoadDistributionFactor(fwPinion, diametralPitch*tPinion);
+Kb = 1; %Rim-Thickness Factor
+Yj = [0.33 0.038]; %****************Hard coded for now * Geometric Bending Strength
+Zi = PitResistanceExtSpur(gearSet.PitchAngle, gearRatio); %Geometric Pitting Resistance
+Ze = ElasticCoefficient(gearSet.Material); %Material-Material Gear Modulus
+
+%Calculate Tooth Stresses [MPa]
+bendingStressPinion = wt * K0 * Kv * Ks(1) * (gearSet.DiametralPitch/gearSet.FaceWidth) * (Kh * Kb)/Yj(1)
+bendingStressGear = wt * K0 * Kv * Ks(2) * (gearSet.DiametralPitch/gearSet.FaceWidth) * (Kh * Kb)/Yj(2)
+contactStressPinion = Ze *  sqrt(wt * K0 * Kv * Ks(1) * (Kh/((gearSet.PinionTeeth / gearSet.DiametralPitch) * gearSet.FaceWidth)) * (Zr/Zi))
+contactStressGear = (Ks(2)/Ks(1))^0.5 * contactStressPinion
+
+%Calculate FOS Coefficients
+Y0 = 1;
+Zr = 1;
+
+St = GetMaxAllowableBendingStress(gearSet.Material); %MPa
+Sc = GetMaxAllowableContactStress(gearSet.Material); %MPa
+
+%% SECTION TITLE
+% DESCRIPTIVE TEXT
+
+%% Auxilary Functions
+% Lookup Functions
+
+%% Max Bending Stress Calculator
+function [St] = GetMaxAllowableBendingStress (material)
+h  = material.H;
+g = material.Grade;
+if(g == 1) %Figure 14-2
+    St = 0.553 * h + 88.3; %MPa
+elseif (g == 2)
+    St = 0.703 * h + 113; %MPa
+end
+end
+
+%% Max Contact Stress Calculator
+function [Sc] = GetMaxAllowableContactStress (material)
+h  = material.H;
+g = material.Grade;
+if(g == 1) %Figure 14-2
+    Sc = 2.22 * h + 200; %MPa
+elseif (g == 2)
+    Sc = 2.41 * h + 237; %MPa
+end
+end
+
+%% Dynamic Factor Calculator
+function [ Kv ] = DynamicFactor( Qv, vel )
+%Calculate Dynamic Factor
+b = 0.25 * (12 - Qv)^(2/3); %Eqn 14-28
+a = 50 + 56 *(1 - b); %Eqn 14-28
+
+Kv = ((a + sqrt(200*vel))/a)^b; %Eqn 14-27
+end
+
+%% Form Factor Lookup
+function [ Y ] = FormFactor(teeth)
+if(teeth>400)
+    Y = 0.485;
+else
+    load FormFactorTable.mat; %Table 14-2
+    Y = interp1(FormFactorTable(:,1)', FormFactorTable(:,2)', teeth);
+end
+clear FormFactorTable
+end
+
+%% Load Distribution Factor Calculator
+function [Kh] = LoadDistributionFactor(F, d)
+Fd = F/(10*d);
+if (Fd < 0.05)
+    Fd = 0.05;
+end
+
+%Find Cpf
+if (F <=1)
+    Cpf=(Fd-0.025);
+elseif (F <= 17)
+    Cpf=(Fd-0.0375+0.0125*F);
+elseif (F<=40)
+    Cpf=(Fd-0.1109+0.0207*F-0.000228*F^2);
+end
+Cmc = 1; %for uncrowned teeth
+Cpm = 1; %straddle-mounted
+Cma = 0.127 + 0.0158 * F - 0.930 * 10^-4 * F^2; %commercial enclosed unit
+Ce = 1; % gearing is not adjusted at assembly, nor compatibility is improved by lapping
+%**************Needs ABC lookup table for Cma
+Kh = 1 + Cmc*(Cpf*Cpm+Cma*Ce);
+end
+
+%% Pit Resistance Calculator
+function [Zi] = PitResistanceExtSpur(pitchAngle, gearRatio)
+Zi = ((cosd(pitchAngle)*sind(pitchAngle)) / 2) * (gearRatio/(gearRatio + 1)); %External Spur (mN = 1)
+end
+
+%% Elastic Coefficient
+function [Ze] = ElasticCoefficient(material)
+E = material.E;
+v = material.v;
+%Assume same material for pinion and gear
+Ze = sqrt(E / (2 * pi * (1 - v^2)));
+end
+
+%% Size Factor Calculator
+function [Ks] = SizeFactor(gearSet)
+%Form Factors
+Yp = FormFactor(gearSet.PinionTeeth);
+Yg = FormFactor(gearSet.GearTeeth);
+
+KsP = 0.8433 * (gearSet.FaceWidth * sqrt(Yp) / gearSet.DiametralPitch)^0.0535;
+KsG = 0.8433 * (gearSet.FaceWidth * sqrt(Yg) / gearSet.DiametralPitch)^0.0535;
+
+Ks = [KsP KsG];
+end
+
+##### SOURCE END #####
+--></body></html>

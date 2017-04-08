@@ -1,20 +1,15 @@
-function [Po,To,W] = output_power(BlankLoad,BeltMass,Jroller,nRollers,RollerRadius,Speed,Friction)
+function [FOSOutputPower,FOSOutputTorque,RequiredOutputVelocity] = output_power(BlankLoad,BeltMass,RollerRadius,Speed,Friction)
 %This function calculates the required output power, torque, and speed
+%(including factor of safety)
+Gravity = 9.81;
+TotalMass = BlankLoad + BeltMass;
 
-Tension = (BlankLoad+BeltMass)*9.81*Friction; % N Tension in a horizontal belt is determined by mass of belt, load, and friction
+Force = TotalMass*Gravity*Friction; % N Tension in a horizontal belt is determined by mass of belt, load, and friction
+TheoreticalOutputTorque = RollerRadius * Force; % N.m, Torque required to run the system
+FOSOutputTorque = TheoreticalOutputTorque*1.2; %N.m, 20% FOS
 
-RunningTorque = RollerRadius * Tension; % N.m (Torque required to run the system)
-StartingTorque = RunningTorque * 2; %N.m (mulitply RunningTorque by 200 percent: http://www.motorsanddrives.com/cowern/motorterms7.html)
+RequiredOutputVelocity = Speed*60/(2*pi*RollerRadius); %Gives the angular velocity in RPM required for linear speed of 0.1m/s
 
-Jtotal = (Jroller * nRollers) + (BlankLoad * RollerRadius^2) + (BeltMass * RollerRadius^2); % kg.m^2 Total inertia of the loads and conveyor
-
-W = Speed*60/(2*pi()*RollerRadius); %Gives the angular velocity in RPM required for linear speed of 0.1m/s
-To = StartingTorque;
-Po = (To*W*pi()/30 + Tension*Speed)/1000; %Torque multiplied by W [rad/s] gives power in kW
-
-%Equations sourced from:
-%http://www.brighthubengineering.com/manufacturing-technology/83551-onsite-calculations-for-conveyor-belt-systems/
-%http://chain-guide.com/basics/2-3-1-coefficient-of-friction.html
+FOSOutputPower = FOSOutputTorque*RequiredOutputVelocity*(2*pi/60)/1000; %Torque multiplied by W [rad/s] gives power in kW
 
 end
-
