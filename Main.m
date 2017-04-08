@@ -291,9 +291,10 @@ B2_C_10 = CatalogueLoadRating(abs(inputShaft.shear(inputShaft.length*1000,2)),9.
 % B6_C_10 = CatalogueLoadRating(abs(outputShaft.shear(outputShaft.length*1000,2)),1.2e6);
 
 %% Critical Speed
+density = 7850;                              % density of 1050 steel in kg/m^3
 
-inputCriticalSpeed = CriticalSpeed(inputShaft.diameter(),inputShaft.forces(),inputShaft.deflection());
-intermediateCriticalSpeed = CriticalSpeed(intermediateShaft.diameter(),intermediateShaft.forces(),intermediateShaft.deflection());
-outputCriticalSpeed = CriticalSpeed(outputShaft.diameter(),outputShaft.forces(),outputShaft.deflection());
+inputCriticalSpeed = CriticalSpeed(inputShaft, density);
+intermediateCriticalSpeed = CriticalSpeed(intermediateShaft, density);
+outputCriticalSpeed = CriticalSpeed(outputShaft, density);
 
 
