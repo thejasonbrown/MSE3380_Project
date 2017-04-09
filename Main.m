@@ -190,7 +190,7 @@ for i=1:length(intermediateShaftArray)
 end
 
 firstIntermediateCriticalPoint = length(inputShaftArray)+1;
-lastIntermediateCriticalPoint = firstIntermediateCriticalPoint + length(intermediateShaftArray);
+lastIntermediateCriticalPoint = firstIntermediateCriticalPoint + length(intermediateShaftArray)-1;
 
 disp('<strong>Intermediate Shaft Results</strong>');
 disp(['The Goodman FOS and yielding FOS for critical locations ' num2str(firstIntermediateCriticalPoint) '-' num2str(lastIntermediateCriticalPoint) ' are:']);
@@ -226,7 +226,7 @@ for i=1:length(outputShaftArray)
 end
 
 firstOutputCriticalPoint = lastIntermediateCriticalPoint+1;
-lastOutputCriticalPoint = firstOutputCriticalPoint + length(outputShaftArray);
+lastOutputCriticalPoint = firstOutputCriticalPoint + length(outputShaftArray)-1;
 
 disp('<strong>Output Shaft Results</strong>');
 disp(['The Goodman FOS and yielding FOS for critical locations ' num2str(firstOutputCriticalPoint) '-' num2str(lastOutputCriticalPoint) ' are:']);
