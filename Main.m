@@ -127,21 +127,6 @@ disp(' ');
 %% Shaft Design
 [ inputShaft, intermediateShaft, outputShaft ] = ShaftLoadings(  );
 
-
-% Conversion Factor
-inchesToM = 25.4/1000;
-
-% From catalogue
-PinionBore = 1.125;
-GearBore = 1.625;
-
-% Design decision
-ShaftFOS = 1.5;
-
-% Will eventually need to add bearing bore
-SmallerBore = min(GearBore, PinionBore);
-BiggerBore = max(GearBore, PinionBore);
-
 % Shaft Material Constants
 % Current Material : 1050 CD, reasoning contained in report
 Sut = 690; %MPa
@@ -149,9 +134,6 @@ Sy = 580; %MPa
 
 %% Input Shaft
 % Critical Point 1
-% HAND CALC - currently bullshit values
-nf1 = 10;
-ny1 = 10;
 
 % Remaining Critical Points
 %Array of variables - x, Kt, Kts
@@ -173,15 +155,7 @@ for i=1:length(inputShaftArray)
     Kt = inputShaftArray(2,i);
     Kts = inputShaftArray(3,i);
     [inputShaftGoodman(i), inputShaftYield(i)] = shaftStress(Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
-    % UNCOMMENT WHEN USING A MATLAB VERSION THAT IS NOT ANCIENT AND HAS
-    % THIS CAPABILITY
-    % inputShaftGoodman(i) = round(inputShaftGoodman(i),2);
-    % inputShaftYield(i) = round(inputShaftYield(i),2);
 end
-
-% MUST ACCOUNT FOR HAND CALC TOO
-inputShaftGoodman = [inputShaftGoodman; nf1];
-inputShaftYield = [inputShaftYield; ny1];
 
 disp('<strong>Input Shaft Results</strong>');
 disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(inputShaftArray)) ' are:']);
@@ -192,10 +166,6 @@ end
 disp(' ');
 
 %% Intermediate Shaft
-% Last Critical Point on output shaft
-% HAND CALC - currently bullshit values
-nf18 = 10;
-ny18 = 10;
 
 % Remaining Critical Points
 %Array of variables - x, Kt, Kts
@@ -217,15 +187,7 @@ for i=1:length(intermediateShaftArray)
     Kt = intermediateShaftArray(2,i);
     Kts = intermediateShaftArray(3,i);
     [intermediateShaftGoodman(i), intermediateShaftYield(i)] = shaftStress(Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
-    % UNCOMMENT WHEN USING A MATLAB VERSION THAT IS NOT ANCIENT AND HAS
-    % THIS CAPABILITY
-    % intermediateShaftGoodman(i) = round(intermediateShaftGoodman(i),2);
-    % intermediateShaftYield(i) = round(intermediateShaftYield(i),2);
 end
-
-% MUST ACCOUNT FOR HAND CALC TOO
-intermediateShaftGoodman = [intermediateShaftGoodman; nf1];
-intermediateShaftYield = [intermediateShaftYield; ny1];
 
 disp('<strong>Intermediate Shaft Results</strong>');
 disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(intermediateShaftArray)) ' are:']);
@@ -237,9 +199,6 @@ disp(' ');
 
 %% Output Shaft
 % Last Critical Point on output shaft
-% HAND CALC - currently bullshit values
-nf18 = 10;
-ny18 = 10;
 
 % Remaining Critical Points
 %Array of variables - x, Kt, Kts
@@ -261,15 +220,7 @@ for i=1:length(outputShaftArray)
     Kt = outputShaftArray(2,i);
     Kts = outputShaftArray(3,i);
     [outputShaftGoodman(i), outputShaftYield(i)] = shaftStress(Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
-    % UNCOMMENT WHEN USING A MATLAB VERSION THAT IS NOT ANCIENT AND HAS
-    % THIS CAPABILITY
-    % outputShaftGoodman(i) = round(outputShaftGoodman(i),2);
-    % outputShaftYield(i) = round(outputShaftYield(i),2);
 end
-
-% MUST ACCOUNT FOR HAND CALC TOO
-outputShaftGoodman = [outputShaftGoodman; nf1];
-outputShaftYield = [outputShaftYield; ny1];
 
 disp('<strong>Output Shaft Results</strong>');
 disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(outputShaftArray)) ' are:']);
