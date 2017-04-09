@@ -281,12 +281,12 @@ B4_L = BearingLife(abs(intermediateShaft.shear(intermediateShaft.length*1000,2))
 B5_L = BearingLife(abs(outputShaft.shear(1,2)),16800);
 B6_L = BearingLife(abs(outputShaft.shear(outputShaft.length*1000,2)),16800);
 
-disp(['The expected life of Bearing 1 is:  ' num2str(B1_L) ' rotations' ]);
-disp(['The expected life of Bearing 2 is:  ' num2str(B2_L) ' rotations' ]);
-disp(['The expected life of Bearing 3 is:  ' num2str(B3_L) ' rotations' ]);
-disp(['The expected life of Bearing 4 is:  ' num2str(B4_L) ' rotations' ]);
-disp(['The expected life of Bearing 5 is:  ' num2str(B5_L) ' rotations' ]);
-disp(['The expected life of Bearing 6 is:  ' num2str(B6_L) ' rotations' ]);
+disp(['The expected life of Bearing 1 is:  ' num2str(B1_L,3) ' rotations' ]);
+disp(['The expected life of Bearing 2 is:  ' num2str(B2_L,3) ' rotations' ]);
+disp(['The expected life of Bearing 3 is:  ' num2str(B3_L,3) ' rotations' ]);
+disp(['The expected life of Bearing 4 is:  ' num2str(B4_L,3) ' rotations' ]);
+disp(['The expected life of Bearing 5 is:  ' num2str(B5_L,3) ' rotations' ]);
+disp(['The expected life of Bearing 6 is:  ' num2str(B6_L,3) ' rotations' ]);
 disp(' ');
 
 %% Critical Speed
