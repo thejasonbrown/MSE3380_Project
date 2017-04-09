@@ -247,12 +247,12 @@ B5_C_10 = CatalogueLoadRating(abs(outputShaft.shear(1,2)),1.2e6);
 B6_C_10 = CatalogueLoadRating(abs(outputShaft.shear(outputShaft.length*1000,2)),1.2e6);
 
 disp('<strong>Bearing Selection</strong>');
-disp(['The catalogue load rating for Bearing 1 is:  ' num2str(B1_C_10,3) ' [N]']);
-disp(['The catalogue load rating for Bearing 2 is:  ' num2str(B2_C_10,3) ' [N]']);
-disp(['The catalogue load rating for Bearing 3 is:  ' num2str(B3_C_10,3) ' [N]']);
-disp(['The catalogue load rating for Bearing 4 is:  ' num2str(B4_C_10,3) ' [N]']);
-disp(['The catalogue load rating for Bearing 5 is:  ' num2str(B5_C_10,3) ' [N]']);
-disp(['The catalogue load rating for Bearing 6 is:  ' num2str(B6_C_10,3) ' [N]']);
+disp(['The catalogue load rating for Bearing 1 is:  ' num2str(B1_C_10) ' [N]']);
+disp(['The catalogue load rating for Bearing 2 is:  ' num2str(B2_C_10) ' [N]']);
+disp(['The catalogue load rating for Bearing 3 is:  ' num2str(B3_C_10) ' [N]']);
+disp(['The catalogue load rating for Bearing 4 is:  ' num2str(B4_C_10) ' [N]']);
+disp(['The catalogue load rating for Bearing 5 is:  ' num2str(B5_C_10) ' [N]']);
+disp(['The catalogue load rating for Bearing 6 is:  ' num2str(B6_C_10) ' [N]']);
 disp(' ');
 
 % Find reliability with selected bearings
@@ -264,12 +264,29 @@ B4_R = BearingReliability(abs(intermediateShaft.shear(intermediateShaft.length*1
 B5_R = BearingReliability(abs(outputShaft.shear(1,2)),1.2e6,16800);
 B6_R = BearingReliability(abs(outputShaft.shear(outputShaft.length*1000,2)),1.2e6,16800);
 
-disp(['The reliability of Bearing 1 is:  ' num2str(real(B1_R),2) ]);
-disp(['The reliability of Bearing 2 is:  ' num2str(real(B2_R),2) ]);
-disp(['The reliability of Bearing 3 is:  ' num2str(real(B3_R),2) ]);
-disp(['The reliability of Bearing 4 is:  ' num2str(real(B4_R),2) ]);
-disp(['The reliability of Bearing 5 is:  ' num2str(real(B5_R),2) ]);
-disp(['The reliability of Bearing 6 is:  ' num2str(real(B6_R),2) ]);
+disp(['The reliability of Bearing 1 is:  ' num2str(real(B1_R)) ]);
+disp(['The reliability of Bearing 2 is:  ' num2str(real(B2_R)) ]);
+disp(['The reliability of Bearing 3 is:  ' num2str(real(B3_R)) ]);
+disp(['The reliability of Bearing 4 is:  ' num2str(real(B4_R)) ]);
+disp(['The reliability of Bearing 5 is:  ' num2str(real(B5_R)) ]);
+disp(['The reliability of Bearing 6 is:  ' num2str(real(B6_R)) ]);
+disp(' ');
+
+% Find the bearing life estimate
+
+B1_L = BearingLife(abs(inputShaft.shear(1,2)),1270);
+B2_L = BearingLife(abs(inputShaft.shear(inputShaft.length*1000,2)),1270);
+B3_L = BearingLife(abs(intermediateShaft.shear(1,2)),4620);
+B4_L = BearingLife(abs(intermediateShaft.shear(intermediateShaft.length*1000,2)),9950);
+B5_L = BearingLife(abs(outputShaft.shear(1,2)),16800);
+B6_L = BearingLife(abs(outputShaft.shear(outputShaft.length*1000,2)),16800);
+
+disp(['The expected life of Bearing 1 is:  ' num2str(B1_L) ' rotations' ]);
+disp(['The expected life of Bearing 2 is:  ' num2str(B2_L) ' rotations' ]);
+disp(['The expected life of Bearing 3 is:  ' num2str(B3_L) ' rotations' ]);
+disp(['The expected life of Bearing 4 is:  ' num2str(B4_L) ' rotations' ]);
+disp(['The expected life of Bearing 5 is:  ' num2str(B5_L) ' rotations' ]);
+disp(['The expected life of Bearing 6 is:  ' num2str(B6_L) ' rotations' ]);
 disp(' ');
 
 %% Critical Speed
