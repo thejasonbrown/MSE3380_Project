@@ -186,7 +186,7 @@ inputShaftYield = [inputShaftYield; ny1];
 disp('<strong>Input Shaft Results</strong>');
 disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(inputShaftArray)) ' are:']);
 for i=1:length(inputShaftGoodman)
-    disp(['  ' num2str(inputShaftGoodman(i)) '  ' num2str(inputShaftYield(i))]);
+    disp(['  ' num2str(inputShaftGoodman(i),2) '  ' num2str(inputShaftYield(i),2)]);
 end 
 
 disp(' ');
@@ -230,7 +230,7 @@ intermediateShaftYield = [intermediateShaftYield; ny1];
 disp('<strong>Intermediate Shaft Results</strong>');
 disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(intermediateShaftArray)) ' are:']);
 for i=1:length(intermediateShaftGoodman)
-    disp(['  ' num2str(intermediateShaftGoodman(i)) '  ' num2str(intermediateShaftYield(i))]);
+    disp(['  ' num2str(intermediateShaftGoodman(i),2) '  ' num2str(intermediateShaftYield(i),2)]);
 end 
 
 disp(' ');
@@ -274,7 +274,7 @@ outputShaftYield = [outputShaftYield; ny1];
 disp('<strong>Output Shaft Results</strong>');
 disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(outputShaftArray)) ' are:']);
 for i=1:length(outputShaftGoodman)
-    disp(['  ' num2str(outputShaftGoodman(i)) '  ' num2str(outputShaftYield(i))]);
+    disp(['  ' num2str(outputShaftGoodman(i),2) '  ' num2str(outputShaftYield(i),2)]);
 end 
 
 disp(' ');
@@ -289,12 +289,14 @@ B4_C_10 = CatalogueLoadRating(abs(intermediateShaft.shear(intermediateShaft.leng
 B5_C_10 = CatalogueLoadRating(abs(outputShaft.shear(1,2)),1.2e6);
 B6_C_10 = CatalogueLoadRating(abs(outputShaft.shear(outputShaft.length*1000,2)),1.2e6);
 
-disp(['The catalogue load rating for Bearing 1 is:  ' num2str(B1_C_10) ' [N]']);
-disp(['The catalogue load rating for Bearing 2 is:  ' num2str(B2_C_10) ' [N]']);
-disp(['The catalogue load rating for Bearing 3 is:  ' num2str(B3_C_10) ' [N]']);
-disp(['The catalogue load rating for Bearing 4 is:  ' num2str(B4_C_10) ' [N]']);
-disp(['The catalogue load rating for Bearing 5 is:  ' num2str(B5_C_10) ' [N]']);
-disp(['The catalogue load rating for Bearing 6 is:  ' num2str(B6_C_10) ' [N]']);
+disp('<strong>Bearing Selection</strong>');
+disp(['The catalogue load rating for Bearing 1 is:  ' num2str(B1_C_10,3) ' [N]']);
+disp(['The catalogue load rating for Bearing 2 is:  ' num2str(B2_C_10,3) ' [N]']);
+disp(['The catalogue load rating for Bearing 3 is:  ' num2str(B3_C_10,3) ' [N]']);
+disp(['The catalogue load rating for Bearing 4 is:  ' num2str(B4_C_10,3) ' [N]']);
+disp(['The catalogue load rating for Bearing 5 is:  ' num2str(B5_C_10,3) ' [N]']);
+disp(['The catalogue load rating for Bearing 6 is:  ' num2str(B6_C_10,3) ' [N]']);
+disp(' ');
 
 % Find reliability with selected bearings
 
@@ -305,18 +307,27 @@ B4_R = BearingReliability(abs(intermediateShaft.shear(intermediateShaft.length*1
 B5_R = BearingReliability(abs(outputShaft.shear(1,2)),1.2e6,16800);
 B6_R = BearingReliability(abs(outputShaft.shear(outputShaft.length*1000,2)),1.2e6,16800);
 
-disp(['The reliability of Bearing 1 is:  ' num2str(real(B1_R)) ]);
-disp(['The reliability of Bearing 2 is:  ' num2str(real(B2_R)) ]);
-disp(['The reliability of Bearing 3 is:  ' num2str(real(B3_R)) ]);
-disp(['The reliability of Bearing 4 is:  ' num2str(real(B4_R)) ]);
-disp(['The reliability of Bearing 5 is:  ' num2str(real(B5_R)) ]);
-disp(['The reliability of Bearing 6 is:  ' num2str(real(B6_R)) ]);
+disp(['The reliability of Bearing 1 is:  ' num2str(real(B1_R),2) ]);
+disp(['The reliability of Bearing 2 is:  ' num2str(real(B2_R),2) ]);
+disp(['The reliability of Bearing 3 is:  ' num2str(real(B3_R),2) ]);
+disp(['The reliability of Bearing 4 is:  ' num2str(real(B4_R),2) ]);
+disp(['The reliability of Bearing 5 is:  ' num2str(real(B5_R),2) ]);
+disp(['The reliability of Bearing 6 is:  ' num2str(real(B6_R),2) ]);
+disp(' ');
 
 %% Critical Speed
-density = 7850;                              % density of 1050 steel in kg/m^3
+density = 7850;  % density of 1050 steel in kg/m^3
 
 inputCriticalSpeed = CriticalSpeed(inputShaft, density);
 intermediateCriticalSpeed = CriticalSpeed(intermediateShaft, density);
 outputCriticalSpeed = CriticalSpeed(outputShaft, density);
+disp('<strong>Shaft Critical Speeds</strong>');
+disp(['The critical speed of the input shaft:  ' num2str(real(inputCriticalSpeed),3) ' RPM']);
+disp(['The critical speed of the intermediate shaft:  ' num2str(real(intermediateCriticalSpeed),3) ' RPM']);
+disp(['The critical speed of the output shaft:  ' num2str(real(outputCriticalSpeed),3) ' RPM']);
 
+%% Output Figures of shaft diagrams
 
+makeFigure(inputShaft);
+makeFigure(intermediateShaft);
+makeFigure(outputShaft);
