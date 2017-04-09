@@ -189,8 +189,11 @@ for i=1:length(intermediateShaftArray)
     [intermediateShaftGoodman(i), intermediateShaftYield(i)] = shaftStress(Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
 end
 
+firstIntermediateCriticalPoint = length(inputShaftArray)+1;
+lastIntermediateCriticalPoint = firstIntermediateCriticalPoint + length(intermediateShaftArray);
+
 disp('<strong>Intermediate Shaft Results</strong>');
-disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(intermediateShaftArray)) ' are:']);
+disp(['The Goodman FOS and yielding FOS for critical locations ' num2str(firstIntermediateCriticalPoint) '-' num2str(lastIntermediateCriticalPoint) ' are:']);
 for i=1:length(intermediateShaftGoodman)
     disp(['  ' num2str(intermediateShaftGoodman(i),2) '  ' num2str(intermediateShaftYield(i),2)]);
 end 
@@ -222,8 +225,11 @@ for i=1:length(outputShaftArray)
     [outputShaftGoodman(i), outputShaftYield(i)] = shaftStress(Sut, Sy, d, Ma, Mm, Ta, Tm, Kt, Kts);
 end
 
+firstOutputCriticalPoint = lastIntermediateCriticalPoint+1;
+lastOutputCriticalPoint = firstOutputCriticalPoint + length(outputShaftArray);
+
 disp('<strong>Output Shaft Results</strong>');
-disp(['The Goodman FOS and yielding FOS for critical locations 1-' num2str(length(outputShaftArray)) ' are:']);
+disp(['The Goodman FOS and yielding FOS for critical locations ' num2str(firstOutputCriticalPoint) '-' num2str(lastOutputCriticalPoint) ' are:']);
 for i=1:length(outputShaftGoodman)
     disp(['  ' num2str(outputShaftGoodman(i),2) '  ' num2str(outputShaftYield(i),2)]);
 end 
